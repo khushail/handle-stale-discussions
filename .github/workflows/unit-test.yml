@@ -4,7 +4,7 @@ on: push
 
 jobs:
   jest-tests:
-    name: jest tests
+    name: Run Unit Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
