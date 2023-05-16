@@ -45,15 +45,3 @@ body:
           required: false
         - label: This feature might incur a breaking change
           required: false
-  - type: input
-    id: sdk-version
-    attributes:
-      label: SDK version used
-    validations:
-      required: true
-  - type: input
-    id: environment
-    attributes:
-      label: Environment details (OS name and version, etc.)
-    validations:
-        required: true

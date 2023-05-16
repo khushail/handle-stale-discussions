@@ -1,6 +1,6 @@
 ---
 name: "📕 Documentation Issue"
-description: Report an issue in the API Reference documentation or Developer Guide
+description: Report an issue in the ReadMe
 title: "(short issue description)"
 labels: [documentation, needs-triage]
 assignees: []
