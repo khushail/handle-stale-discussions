@@ -1,14 +1,9 @@
-### Issue
-Issue number, if available, prefixed with "#"
+*Issue #, if available:*
 
-### Description
-What does this implement/fix? Explain your changes.
-
-### Testing
-How was this change tested?
-
-### Additional context
-Add any other context about the PR here.
+*Description of changes:*
 
 ---
+
+* [ ] Have you followed the guidelines in our [Contributing guide?](https://github.com/aws-actions/configure-aws-credentials/blob/main/CONTRIBUTING.md)
+
 By submitting this pull request, I confirm that you can use, modify, copy, and redistribute this contribution, under the terms of your choice.

@@ -1,6 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client/core';
-import { AddCommentToDiscussion, getTotalDiscussionCount } from '..';
-import { UpdateDiscussionComment ,AddDiscussionComment, MarkDiscussionCommentAsAnswer, GetDiscussionCount, GetAnswerableDiscussionId} from '../generated/graphql';
+import { UpdateDiscussionComment ,AddDiscussionComment, MarkDiscussionCommentAsAnswer, GetDiscussionCount, GetAnswerableDiscussionId} from '../src/generated/graphql';
 //import { gql } from 'apollo-server';
 //import { MyMutation, MyQuery } from './myGraphQLQueries';
 
