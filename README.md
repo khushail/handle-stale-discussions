@@ -284,6 +284,11 @@ Once the required setup, installation is done with queries and mutations needed,
 - `test/index.test.ts` - unit test code for different code blocks.
 - `codegen.yml` - config setup file for codegen.
 
+## Testing 
+
+Jest framework is used for testing. Setup instructions can be found [here](https://jestjs.io/docs/getting-started). Please refer to `test/index.test.js` for writing unit tests.
+
+
 ## References 
 
 - [Github GraphQL API]()
