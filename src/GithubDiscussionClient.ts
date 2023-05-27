@@ -15,6 +15,8 @@ export class GithubDiscussionClient {
   private attentionLabelId: string;
 
   constructor(owner: string, repo: string) {
+    this.owner = owner;
+    this.repo = repo;
     const githubToken = core.getInput('github-token', { required: false }) || process.env.GITHUB_TOKEN;
     if (!githubToken) {
       throw new Error('You must provide a GitHub token as an input to this action, or as a `GITHUB_TOKEN` env variable. See the README for more info.');
