@@ -8,7 +8,7 @@ export declare class GithubDiscussionClient {
     private repo;
     private attentionLabelId;
     constructor(owner: string, repo: string);
-    getGithubClient(): ApolloClient<NormalizedCacheObject>;
+    initializeGithubClient(): ApolloClient<NormalizedCacheObject>;
     closeDiscussionsInAbsenceOfReaction(commentDate: Date, discussionId: string): Promise<void>;
     triggerReactionContentBasedAction(content: ReactionContent, bodyText: string, discussionId: string, commentId: string, proposedAnswerText: string): Promise<void>;
     remindAuthorForAction(commentDate: Date, author: string, discussionId: string, remindResponseText: string): Promise<void>;

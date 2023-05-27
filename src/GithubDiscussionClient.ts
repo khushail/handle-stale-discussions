@@ -24,25 +24,21 @@ export class GithubDiscussionClient {
       this.githubToken = githubToken;
     }
 
-    this.getGithubClient();
+    this.initializeGithubClient();
   }
 
-  getGithubClient(): ApolloClient<NormalizedCacheObject> {
-    if (!this.githubClient) {
-      this.githubClient = new ApolloClient({
-        link: new HttpLink({
-          uri: "https://api.github.com/graphql",
-          headers: {
-            authorization: `token ${this.githubToken}`,
-          },
-          fetch
-        }),
-        cache: new InMemoryCache(),
-      });
-      return this.githubClient;
-    } else {
-      return this.githubClient;
-    }
+  initializeGithubClient(): ApolloClient<NormalizedCacheObject> {
+    this.githubClient = new ApolloClient({
+      link: new HttpLink({
+        uri: "https://api.github.com/graphql",
+        headers: {
+          authorization: `token ${this.githubToken}`,
+        },
+        fetch
+      }),
+      cache: new InMemoryCache(),
+    });
+    return this.githubClient;
   }
 
   async closeDiscussionsInAbsenceOfReaction(commentDate: Date, discussionId: string) {
