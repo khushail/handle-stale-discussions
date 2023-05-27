@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
 import { DiscussionConnection } from "@octokit/graphql-schema";
-import { MarkDiscussionCommentAsAnswerMutation, AddLabelToDiscussionMutation, UpdateDiscussionCommentMutation, ReactionContent } from "./generated/graphql";
+import { MarkDiscussionCommentAsAnswerMutation, AddLabelToDiscussionMutation, UpdateDiscussionCommentMutation } from "./generated/graphql";
 export declare class GithubDiscussionClient {
     githubClient: ApolloClient<NormalizedCacheObject>;
     private githubToken;
@@ -8,14 +8,11 @@ export declare class GithubDiscussionClient {
     private repo;
     private attentionLabelId;
     constructor(owner: string, repo: string);
-    initializeGithubClient(): ApolloClient<NormalizedCacheObject>;
-    closeDiscussionsInAbsenceOfReaction(commentDate: Date, discussionId: string): Promise<void>;
-    triggerReactionContentBasedAction(content: ReactionContent, bodyText: string, discussionId: string, commentId: string, proposedAnswerText: string): Promise<void>;
-    remindAuthorForAction(commentDate: Date, author: string, discussionId: string, remindResponseText: string): Promise<void>;
+    private initializeGithubClient;
+    initializeAttentionLabelId(): Promise<string>;
     getTotalDiscussionCount(categoryID: string): Promise<number | undefined>;
     getDiscussionsMetaData(categoryID: string): Promise<DiscussionConnection>;
     getAnswerableDiscussionCategoryIDs(): Promise<any>;
-    getAttentionLabelId(label: string): Promise<string>;
     closeDiscussionAsResolved(discussionId: string): Promise<string | undefined>;
     closeDiscussionAsOutdated(discussionId: string): Promise<string | undefined>;
     addCommentToDiscussion(discussionId: string, body: string): Promise<void>;

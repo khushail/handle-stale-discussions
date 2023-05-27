@@ -4,9 +4,6 @@ import fetch from 'cross-fetch';
 import { DiscussionConnection } from "@octokit/graphql-schema";
 import { GetDiscussionCountQuery, GetDiscussionCountQueryVariables, GetDiscussionCount, GetDiscussionDataQuery, GetDiscussionDataQueryVariables, GetDiscussionData, GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables, GetAnswerableDiscussionId, GetLabelIdQuery, GetLabelId, CloseDiscussionAsResolvedMutation, CloseDiscussionAsResolved, CloseDiscussionAsOutdatedMutation, CloseDiscussionAsOutdated, AddDiscussionCommentMutation, AddDiscussionComment, MarkDiscussionCommentAsAnswerMutation, MarkDiscussionCommentAsAnswer, AddLabelToDiscussionMutation, AddLabelToDiscussion, UpdateDiscussionCommentMutation, UpdateDiscussionComment, ReactionContent } from "./generated/graphql";
 
-const DAYS_UNTIL_STALE = parseInt(core.getInput('days-until-stale', { required: false })) || 7;
-const DAYS_UNTIL_CLOSE = parseInt(core.getInput('days-until-close', { required: false })) || 4;
-
 export class GithubDiscussionClient {
   public githubClient: ApolloClient<NormalizedCacheObject>;
   private githubToken: string;
@@ -25,9 +22,10 @@ export class GithubDiscussionClient {
     }
 
     this.initializeGithubClient();
+    this.initializeAttentionLabelId();
   }
 
-  initializeGithubClient(): ApolloClient<NormalizedCacheObject> {
+  private initializeGithubClient(): ApolloClient<NormalizedCacheObject> {
     this.githubClient = new ApolloClient({
       link: new HttpLink({
         uri: "https://api.github.com/graphql",
@@ -41,57 +39,26 @@ export class GithubDiscussionClient {
     return this.githubClient;
   }
 
-  async closeDiscussionsInAbsenceOfReaction(commentDate: Date, discussionId: string) {
-    const currentDate: Date = new Date();
-    const diffInMs: number = currentDate.getTime() - commentDate.getTime();
-    const diffInDays: number = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-  
-    core.debug(`current date: ${currentDate} and the comment date : ${commentDate}`);
-    if ((diffInDays >= DAYS_UNTIL_CLOSE)) {
-      core.info("Discussion author has not responded in a while, so closing the discussion");
-      const closeForStalenessResponseText = "Closing the discussion for staleness";
-      core.debug("Responsetext: " + closeForStalenessResponseText);
-      this.addCommentToDiscussion(discussionId, closeForStalenessResponseText);
-      this.closeDiscussionAsOutdated(discussionId);
-    }
-  }
+  async initializeAttentionLabelId() {
+    if (!this.attentionLabelId) {
+      const attentionLabel = core.getInput('attention-label', { required: false }) || 'attention';
+      const result = await this.githubClient.query<GetLabelIdQuery>({
+        query: GetLabelId,
+        variables: {
+          owner: this.owner,
+          name: this.repo,
+          labelName: attentionLabel
+        }
+      });
+    
+      if (!result.data.repository?.label?.id) {
+        throw new Error(`Couldn't find mentioned Label!`);
+      }
 
-  async triggerReactionContentBasedAction(content: ReactionContent, bodyText: string, discussionId: string, commentId: string, proposedAnswerText: string) {
-    core.debug("Printing content reaction :  " + content);
-  
-    if (content.length === 0) {
-      throw new Error("Null content reaction received, can not proceed");
-    }
-  
-    if ((content === ReactionContent.ThumbsUp) || (content === ReactionContent.Heart) || (content === ReactionContent.Hooray) || (content === ReactionContent.Laugh) || (content === ReactionContent.Rocket)) {
-      core.info("Positive reaction received. Marking discussion as answered");
-  
-      //remove the keyword from the comment and upate comment
-      const updatedText = bodyText.replace(proposedAnswerText, 'Answer: ');
-      core.debug("updated text :" + updatedText);
-      await this.updateDiscussionComment(commentId, updatedText!);
-      await this.markDiscussionCommentAsAnswer(commentId);
-      await this.closeDiscussionAsResolved(discussionId);
-    }
-    else if ((content === ReactionContent.ThumbsDown) || (content === ReactionContent.Confused)) {
-      core.info("Negative reaction received. Adding attention label to receive further attention from a repository maintainer");
-      await this.addAttentionLabelToDiscussion(discussionId);
-    }
-  }
-
-  async remindAuthorForAction(commentDate: Date, author: string, discussionId: string, remindResponseText: string) {
-    const currentDate: Date = new Date();
-    const diffInMs: number = currentDate.getTime() - commentDate.getTime();
-    const diffInHrs: number = Math.floor(diffInMs / (1000 * 60 * 60));
-    const diffInDays: number = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-  
-    core.debug(`current date: ${currentDate} and the comment date : ${commentDate}`);
-    core.debug(`Answer was proposed ${diffInDays} days and ${diffInHrs} hrs ago.`);
-  
-    if ((diffInDays >= DAYS_UNTIL_STALE)) {
-      const remindAuthorResponseText = "Hey @" + author + ", " + remindResponseText;
-      core.debug("Responsetext: " + remindAuthorResponseText);
-      await this.addCommentToDiscussion(discussionId, remindAuthorResponseText);
+      this.attentionLabelId = result.data.repository?.label?.id;
+      return this.attentionLabelId;
+    } else {
+      return this.attentionLabelId;
     }
   }
 
@@ -133,7 +100,6 @@ export class GithubDiscussionClient {
   }
 
   async getAnswerableDiscussionCategoryIDs(): Promise<any> {
-
     const answerableCategoryIDs: string[] = [];
     const result = await this.githubClient.query<GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables>({
       query: GetAnswerableDiscussionId,
@@ -161,29 +127,6 @@ export class GithubDiscussionClient {
     return answerableCategoryIDs;
   }
 
-  async getAttentionLabelId(label: string) {
-    if (!this.attentionLabelId) {
-      const attentionLabel = core.getInput('attention-label', { required: false }) || 'attention';
-      const result = await this.githubClient.query<GetLabelIdQuery>({
-        query: GetLabelId,
-        variables: {
-          owner: this.owner,
-          name: this.repo,
-          labelName: label
-        }
-      });
-    
-      if (!result.data.repository?.label?.id) {
-        throw new Error(`Couldn't find mentioned Label!`);
-      }
-
-      this.attentionLabelId = result.data.repository?.label?.id;
-      return this.attentionLabelId;
-    } else {
-      return this.attentionLabelId;
-    }
-  }
-
   async closeDiscussionAsResolved(discussionId: string) {
     core.info("Closing discussion as resolved");
     const result = await this.githubClient.mutate<CloseDiscussionAsResolvedMutation>({
@@ -196,6 +139,7 @@ export class GithubDiscussionClient {
     if (result.errors) {
       throw new Error("Error in retrieving result discussion id");
     }
+
     return result.data?.closeDiscussion?.discussion?.id;
   }
 
@@ -210,6 +154,7 @@ export class GithubDiscussionClient {
     if (result.errors) {
       throw new Error("Error in closing outdated discussion");
     }
+
     return result.data?.closeDiscussion?.discussion?.id;
   }
 
@@ -217,8 +162,7 @@ export class GithubDiscussionClient {
     if (discussionId === "") {
       throw new Error(`Couldn't create comment as discussionId is null!`);
     }
-  
-    core.debug("discussionID :: " + discussionId + " bodyText ::" + body);
+
     const result = await this.githubClient.mutate<AddDiscussionCommentMutation>({
       mutation: AddDiscussionComment,
       variables: {
@@ -243,16 +187,14 @@ export class GithubDiscussionClient {
     if (result.errors) {
       throw new Error("Error in mutation of marking comment as answer, can not proceed");
     }
+
     return result;
   }
 
   async addAttentionLabelToDiscussion(discussionId: string) {
-
     if (discussionId === "") {
       throw new Error("Invalid discussion id, can not proceed!");
     }
-  
-    core.debug("discussion id : " + discussionId + "  labelid : " + this.attentionLabelId);
   
     const result = await this.githubClient.mutate<AddLabelToDiscussionMutation>({
       mutation: AddLabelToDiscussion,
