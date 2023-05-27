@@ -7,6 +7,7 @@ const DAYS_UNTIL_STALE = parseInt(core.getInput('days-until-stale', { required: 
 const DAYS_UNTIL_CLOSE = parseInt(core.getInput('days-until-close', { required: false })) || 4;
 
 export class GithubDiscussionClient {
+  public githubClient: ApolloClient<NormalizedCacheObject>;
   private githubToken: string;
   private owner: string;
   private repo: string;
@@ -21,9 +22,9 @@ export class GithubDiscussionClient {
     }
   }
 
-  get githubClient(): ApolloClient<NormalizedCacheObject> {
+  getGithubClient(): ApolloClient<NormalizedCacheObject> {
     if (!this.githubClient) {
-      return new ApolloClient({
+      this.githubClient = new ApolloClient({
         link: new HttpLink({
           uri: "https://api.github.com/graphql",
           headers: {
@@ -33,6 +34,7 @@ export class GithubDiscussionClient {
         }),
         cache: new InMemoryCache(),
       });
+      return this.githubClient;
     } else {
       return this.githubClient;
     }
