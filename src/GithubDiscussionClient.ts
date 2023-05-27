@@ -20,6 +20,8 @@ export class GithubDiscussionClient {
     } else {
       this.githubToken = githubToken;
     }
+
+    this.getGithubClient();
   }
 
   getGithubClient(): ApolloClient<NormalizedCacheObject> {
