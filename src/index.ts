@@ -99,6 +99,8 @@ async function triggerReactionContentBasedAction(content: ReactionContent, bodyT
     await githubClient.updateDiscussionComment(commentId, updatedAnswerText!);
     await githubClient.markDiscussionCommentAsAnswer(commentId);
     await githubClient.closeDiscussionAsResolved(discussionId);
+  } else {
+    core.debug("Must be an eye reaction");
   }
 }
 
