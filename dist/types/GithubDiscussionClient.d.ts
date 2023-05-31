@@ -2,13 +2,13 @@ import { ApolloClient, NormalizedCacheObject } from "@apollo/client/core";
 import { DiscussionConnection } from "@octokit/graphql-schema";
 import { MarkDiscussionCommentAsAnswerMutation, AddLabelToDiscussionMutation, UpdateDiscussionCommentMutation } from "./generated/graphql";
 export declare class GithubDiscussionClient {
-    githubClient: ApolloClient<NormalizedCacheObject>;
+    private _githubClient;
     private githubToken;
     private owner;
     private repo;
     private attentionLabelId;
     constructor(owner: string, repo: string);
-    private initializeGithubClient;
+    get githubClient(): ApolloClient<NormalizedCacheObject>;
     initializeAttentionLabelId(): Promise<string>;
     getTotalDiscussionCount(categoryID: string): Promise<number | undefined>;
     getDiscussionsMetaData(categoryID: string): Promise<DiscussionConnection>;

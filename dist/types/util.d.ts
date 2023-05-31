@@ -1,4 +1,11 @@
-import { ReactionContent } from "./generated/graphql";
-export declare function daysSinceComment(commentDate: Date): number;
-export declare function containsPositiveReaction(content: ReactionContent): boolean;
-export declare function containsNegativeReaction(content: ReactionContent): boolean;
+import * as octokit from "@octokit/graphql-schema";
+export declare function daysSinceComment(comment: octokit.DiscussionCommentEdge): number;
+export declare function isPositiveReaction(content: octokit.ReactionContent): boolean;
+export declare function isNegativeReaction(content: octokit.ReactionContent): boolean;
+export declare function containsPositiveReaction(comment: octokit.DiscussionCommentEdge): boolean;
+export declare function containsNegativeReaction(comment: octokit.DiscussionCommentEdge): boolean;
+export declare function hasReaction(comment: octokit.DiscussionCommentEdge): boolean;
+export declare function containsText(comment: octokit.DiscussionCommentEdge, text: string): boolean;
+export declare function exceedsDaysUntilStale(comment: octokit.DiscussionCommentEdge, staleTimeDays: number): boolean;
+export declare function hasReply(comment: octokit.DiscussionCommentEdge, discussion: octokit.DiscussionEdge): boolean;
+export declare function hasInstructionsReply(comment: octokit.DiscussionCommentEdge, discussion: octokit.DiscussionEdge): boolean;

@@ -5,7 +5,7 @@ import { DiscussionConnection } from "@octokit/graphql-schema";
 import { GetDiscussionCountQuery, GetDiscussionCountQueryVariables, GetDiscussionCount, GetDiscussionDataQuery, GetDiscussionDataQueryVariables, GetDiscussionData, GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables, GetAnswerableDiscussionId, GetLabelIdQuery, GetLabelId, CloseDiscussionAsResolvedMutation, CloseDiscussionAsResolved, CloseDiscussionAsOutdatedMutation, CloseDiscussionAsOutdated, AddDiscussionCommentMutation, AddDiscussionComment, MarkDiscussionCommentAsAnswerMutation, MarkDiscussionCommentAsAnswer, AddLabelToDiscussionMutation, AddLabelToDiscussion, UpdateDiscussionCommentMutation, UpdateDiscussionComment, ReactionContent } from "./generated/graphql";
 
 export class GithubDiscussionClient {
-  public githubClient: ApolloClient<NormalizedCacheObject>;
+  private _githubClient: ApolloClient<NormalizedCacheObject>;
   private githubToken: string;
   private owner: string;
   private repo: string;
@@ -21,22 +21,23 @@ export class GithubDiscussionClient {
       this.githubToken = githubToken;
     }
 
-    this.initializeGithubClient();
     this.initializeAttentionLabelId();
   }
 
-  private initializeGithubClient(): ApolloClient<NormalizedCacheObject> {
-    this.githubClient = new ApolloClient({
-      link: new HttpLink({
-        uri: "https://api.github.com/graphql",
-        headers: {
-          authorization: `token ${this.githubToken}`,
-        },
-        fetch
-      }),
-      cache: new InMemoryCache(),
-    });
-    return this.githubClient;
+  get githubClient(): ApolloClient<NormalizedCacheObject> {
+    if (!this._githubClient) {
+      this._githubClient = new ApolloClient({
+        link: new HttpLink({
+          uri: "https://api.github.com/graphql",
+          headers: {
+            authorization: `token ${this.githubToken}`,
+          },
+          fetch
+        }),
+        cache: new InMemoryCache(),
+      });
+    }
+    return this._githubClient;
   }
 
   async initializeAttentionLabelId() {
