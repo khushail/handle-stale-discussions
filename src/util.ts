@@ -35,13 +35,11 @@ export function containsNegativeReaction(comment: octokit.DiscussionCommentEdge)
 }
 
 export function hasReaction(comment: octokit.DiscussionCommentEdge): boolean {
-  core.debug('reactions: ' + comment?.node?.reactions.nodes?.length.toString()!)
   return comment?.node?.reactions.nodes?.length !== 0;
 }
 
 export function containsText(comment: octokit.DiscussionCommentEdge, text: string): boolean {
-  core.debug(comment?.node?.bodyText?.indexOf(text).toString()! + text);
-  return !!comment?.node?.bodyText?.indexOf(text);
+  return comment?.node?.bodyText?.indexOf(text)! >= 0;
 }
 
 export function exceedsDaysUntilStale(comment: octokit.DiscussionCommentEdge, staleTimeDays: number): boolean {
