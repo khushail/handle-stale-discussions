@@ -18,8 +18,3 @@ inputs:
     description: 'Number of days of inactivity before a discussion is considered stale'
     required: false
     default: 7
-  days-until-close:
-    description: 'Number of days of inactivity before a stale discussion is closed'
-    required: false
-    default: 4
-

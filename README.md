@@ -46,12 +46,6 @@ This is the number of days before a discussion with a proposed answer will be co
 
 The default number of days is 7.
 
-### days-until-close
-
-This is the number of days before a stale discussion will be closed. 
-
-The default number of days is 4.
-
 ## Contributing 
 We welcome community contributions and pull requests. See [CONTRIBUTING.md](https://github.com/aws-github-ops/handle-stale-discussions/blob/main/CONTRIBUTING.md) for information on how to submit code.
 
