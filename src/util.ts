@@ -20,16 +20,12 @@ export function isNegativeReaction(content: octokit.ReactionContent): boolean {
 
 export function containsPositiveReaction(comment: octokit.DiscussionCommentEdge): boolean {
   return comment.node?.reactions.nodes?.some(reaction => {
-    core.debug(`Reaction content: ${reaction?.content}`);
-    core.debug(isPositiveReaction(reaction?.content!).toString());
     return isPositiveReaction(reaction?.content!);
   })!;
 }
 
 export function containsNegativeReaction(comment: octokit.DiscussionCommentEdge): boolean {
   return comment.node?.reactions.nodes?.some(reaction => {
-    core.debug(`Reaction content: ${reaction?.content}`);
-    core.debug(isNegativeReaction(reaction?.content!).toString());
     return isNegativeReaction(reaction?.content!);
   })!;
 }
