@@ -71,14 +71,12 @@ export default schema.json;
 
 This will load the schema up from the package published by Github, @octokit/graphql-schema.
 
-6. Finally, you’ll need to add `ts-node/register` to your `codegen.yml` file so the `github-schema-loader.ts` can be transpiled. The file should look like this:
+6. Finally, you’ll need to add `ts-node/register` to your `codegen.yml` file so the `github-schema-loader.ts` can be transpiled. The complete file code looks like this -
 
 ```
 overwrite: true
 
 schema: "src/generated/github-schema-loader.ts"
-
-documents: null
 
 generates:
   src/generated/graphql.ts:
@@ -89,6 +87,10 @@ generates:
 
 require:
   - ts-node/register
+
+documents:
+  - src/queries/*.graphql
+  - src/mutations/*.graphql
 
 ```
 
