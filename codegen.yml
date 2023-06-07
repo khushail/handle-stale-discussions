@@ -1,6 +1,7 @@
-# codegen.yml
 overwrite: true
+
 schema: "src/generated/github-schema-loader.ts"
+
 generates:
   src/generated/graphql.ts:
     plugins:

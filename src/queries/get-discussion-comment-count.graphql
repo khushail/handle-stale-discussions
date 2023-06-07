@@ -1,0 +1,9 @@
+query getDiscussionCommentCount($owner: String!, $name: String!, $num: Int!){
+  repository(owner: $owner, name: $name) {
+    discussion(number: $num) {
+      comments {
+        totalCount
+      }
+    }
+  }
+}

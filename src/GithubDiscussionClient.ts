@@ -2,7 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from "@a
 import * as core from '@actions/core';
 import fetch from 'cross-fetch';
 import { DiscussionConnection } from "@octokit/graphql-schema";
-import { GetDiscussionCountQuery, GetDiscussionCountQueryVariables, GetDiscussionCount, GetDiscussionDataQuery, GetDiscussionDataQueryVariables, GetDiscussionData, GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables, GetAnswerableDiscussionId, GetLabelIdQuery, GetLabelId, CloseDiscussionAsResolvedMutation, CloseDiscussionAsResolved, CloseDiscussionAsOutdatedMutation, CloseDiscussionAsOutdated, AddDiscussionCommentMutation, AddDiscussionComment, MarkDiscussionCommentAsAnswerMutation, MarkDiscussionCommentAsAnswer, AddLabelToDiscussionMutation, AddLabelToDiscussion, UpdateDiscussionCommentMutation, UpdateDiscussionComment, ReactionContent } from "./generated/graphql";
+import { GetDiscussionCountQuery, GetDiscussionCountQueryVariables, GetDiscussionCount, GetDiscussionDataQuery, GetDiscussionDataQueryVariables, GetDiscussionData, GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables, GetAnswerableDiscussionId, GetLabelIdQuery, GetLabelId, CloseDiscussionAsResolvedMutation, CloseDiscussionAsResolved, CloseDiscussionAsOutdatedMutation, CloseDiscussionAsOutdated, AddDiscussionCommentMutation, AddDiscussionComment, MarkDiscussionCommentAsAnswerMutation, MarkDiscussionCommentAsAnswer, AddLabelToDiscussionMutation, AddLabelToDiscussion, UpdateDiscussionCommentMutation, UpdateDiscussionComment, ReactionContent, GetDiscussionCommentCountQuery, GetDiscussionCommentCount, GetCommentReactionCountQuery, GetCommentReactionCount, GetCommentReactionDataQuery, GetCommentReactionData, DiscussionCommentConnection, GetCommentMetaDataQuery, GetCommentMetaDataQueryVariables, GetCommentMetaData, DiscussionComment, TeamDiscussionCommentConnection, Discussion } from "./generated/graphql";
 
 export class GithubDiscussionClient {
   private _githubClient: ApolloClient<NormalizedCacheObject>;
@@ -51,7 +51,7 @@ export class GithubDiscussionClient {
           labelName: attentionLabel
         }
       });
-    
+
       if (!result.data.repository?.label?.id) {
         throw new Error(`Couldn't find mentioned Label!`);
       }
@@ -64,7 +64,7 @@ export class GithubDiscussionClient {
   }
 
   async getTotalDiscussionCount(categoryID: string) {
-    const resultCountObject = await this.githubClient.query<GetDiscussionCountQuery, GetDiscussionCountQueryVariables>({
+    const resultCountObject = await this.githubClient.query<GetDiscussionCountQuery>({
       query: GetDiscussionCount,
       variables: {
         owner: this.owner,
@@ -72,19 +72,19 @@ export class GithubDiscussionClient {
         categoryId: categoryID
       },
     });
-  
     if (resultCountObject.error) {
       throw new Error("Error in reading discussions count");
     }
-  
+
     core.debug(`Total discussion count : ${resultCountObject.data.repository?.discussions.totalCount}`);
     return resultCountObject.data.repository?.discussions.totalCount;
   }
 
   async getDiscussionsMetaData(categoryID: string): Promise<DiscussionConnection> {
     const discussionsCount = await this.getTotalDiscussionCount(categoryID);
-  
-    const discussions = await this.githubClient.query<GetDiscussionDataQuery, GetDiscussionDataQueryVariables>({
+    const discussionIdList: DiscussionConnection[] = [];
+
+    const result = await this.githubClient.query<GetDiscussionDataQuery>({
       query: GetDiscussionData,
       variables: {
         owner: this.owner,
@@ -93,38 +93,37 @@ export class GithubDiscussionClient {
         count: discussionsCount,
       },
     })
-  
-    if (discussions.error) { throw new Error("Error in retrieving discussions metadata"); }
-  
-    //iterate over each discussion to process body text/comments/reactions
-    return discussions.data.repository?.discussions as DiscussionConnection;
+
+    if (result.error) { throw new Error("Error in retrieving all discussions metadata"); }
+
+    return result.data.repository?.discussions as DiscussionConnection;
   }
 
   async getAnswerableDiscussionCategoryIDs(): Promise<any> {
     const answerableCategoryIDs: string[] = [];
-    const result = await this.githubClient.query<GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables>({
+    const result = await this.githubClient.query<GetAnswerableDiscussionIdQuery>({
       query: GetAnswerableDiscussionId,
       variables: {
         owner: this.owner,
         name: this.repo
       },
     });
-  
+
     if (!result.data.repository) {
       throw new Error(`Couldn't find repository id!`);
     }
-  
+
     //iterate over discussion categories to get the id for answerable one
     result.data.repository.discussionCategories.edges?.forEach(element => {
       if (element?.node?.isAnswerable == true) {
         answerableCategoryIDs.push(element?.node?.id);
       }
     })
-  
+
     if (answerableCategoryIDs.length === 0) {
       throw new Error("There are no Answerable category discussions in this repository");
     }
-  
+
     return answerableCategoryIDs;
   }
 
@@ -136,7 +135,7 @@ export class GithubDiscussionClient {
         discussionId
       }
     });
-  
+
     if (result.errors) {
       throw new Error("Error in retrieving result discussion id");
     }
@@ -151,7 +150,7 @@ export class GithubDiscussionClient {
         discussionId
       }
     });
-  
+
     if (result.errors) {
       throw new Error("Error in closing outdated discussion");
     }
@@ -171,7 +170,7 @@ export class GithubDiscussionClient {
         body,
       },
     });
-  
+
     if (result.errors) {
       throw new Error("Mutation adding comment to discussion failed with error");
     }
@@ -184,7 +183,7 @@ export class GithubDiscussionClient {
         commentId
       }
     });
-  
+
     if (result.errors) {
       throw new Error("Error in mutation of marking comment as answer, can not proceed");
     }
@@ -196,7 +195,7 @@ export class GithubDiscussionClient {
     if (discussionId === "") {
       throw new Error("Invalid discussion id, can not proceed!");
     }
-  
+
     const result = await this.githubClient.mutate<AddLabelToDiscussionMutation>({
       mutation: AddLabelToDiscussion,
       variables: {
@@ -204,11 +203,11 @@ export class GithubDiscussionClient {
         labelIds: this.attentionLabelId,
       }
     });
-  
+
     if (result.errors) {
       throw new Error("Error in mutation of adding label to discussion, can not proceed!");
     }
-  
+
     return result;
   }
 
@@ -220,11 +219,92 @@ export class GithubDiscussionClient {
         body
       }
     });
-  
+
     if (result.errors) {
       throw new Error("Error in updating discussion comment");
     }
-  
+
     return result;
+  }
+
+  async getDiscussionCommentCount(owner: string, name: string, discussionNum: number): Promise<any> {
+    const result = await this.githubClient.query<GetDiscussionCommentCountQuery>({
+      query: GetDiscussionCommentCount,
+      variables: {
+        owner: this.owner,
+        name: this.repo,
+        num: discussionNum
+      },
+    });
+
+    if (result.error)
+      throw new Error("Error in retrieving comment count related to discussion!");
+
+    return result.data.repository?.discussion?.comments.totalCount;
+  }
+
+
+  async getCommentReactionCount(owner: string, name: string, discussionNum: number, commentCount: number): Promise<any> {
+    if (commentCount == 0)
+    {
+      core.info("Comments on the discussion does not exist!");
+      return;
+    }
+
+    const result = await this.githubClient.query<GetCommentReactionCountQuery>({
+      query: GetCommentReactionCount,
+      variables: {
+        owner: this.owner,
+        name: this.repo,
+        discussionNum: discussionNum,
+        commentCount: commentCount
+      },
+    });
+
+    if (result.error)
+      throw new Error("Error in retrieving comment count related to discussion!");
+
+    return result.data.repository?.discussion?.comments?.edges;
+  }
+
+  async getCommentReactionData(owner: string, name: string, discussionNum: number, commentCount: number, reactionCount: number): Promise<any> {
+    if (reactionCount == 0)
+    {
+      core.info("No reactions posted on the comments!");
+      return;
+    }
+
+    const result = await this.githubClient.query<GetCommentReactionDataQuery>({
+      query: GetCommentReactionData,
+      variables: {
+        owner: this.owner,
+        name: this.repo,
+        discussionNum: discussionNum,
+        commentCount: commentCount,
+        reactionCount: reactionCount
+      },
+    });
+
+    if (result.error)
+      throw new Error("Error in retrieving reaction on comment!");
+
+    return result.data.repository?.discussion?.comments.edges;
+  }
+
+
+  async getCommentsMetaData(discussionNum: number, commentCount: number): Promise<DiscussionCommentConnection> {
+    const result = await this.githubClient.query<GetCommentMetaDataQuery, GetCommentMetaDataQueryVariables>({
+      query: GetCommentMetaData,
+      variables: {
+        owner: this.owner,
+        name: this.repo,
+        discussionNumber: discussionNum,
+        commentCount: commentCount,
+      },
+    })
+
+    if (result.error) { throw new Error("Error in retrieving comment metadata"); }
+
+    return result.data.repository?.discussion?.comments as DiscussionCommentConnection ;
   }
 }
