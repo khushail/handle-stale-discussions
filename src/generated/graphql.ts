@@ -41570,7 +41570,7 @@ export const GetDiscussionCount = gql`
 }
     `;
 export const GetDiscussionData = gql`
-    query GetDiscussionData($owner: String!, $name: String!, $categoryID: ID!, $discussionsCount: Int, $commentsCount: Int) {
+    query GetDiscussionData($owner: String!, $name: String!, $categoryID: ID!, $discussionsCount: Int) {
   repository(owner: $owner, name: $name) {
     discussions(categoryId: $categoryID, last: $discussionsCount) {
       edges {
@@ -41736,7 +41736,6 @@ export type GetDiscussionDataQueryVariables = Exact<{
   name: Scalars['String'];
   categoryID: Scalars['ID'];
   discussionsCount?: InputMaybe<Scalars['Int']>;
-  commentsCount?: InputMaybe<Scalars['Int']>;
 }>;
 
 

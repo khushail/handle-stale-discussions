@@ -1,4 +1,4 @@
-query GetDiscussionData($owner: String!, $name: String!,$categoryID: ID!, $discussionsCount: Int, $commentsCount: Int) {
+query GetDiscussionData($owner: String!, $name: String!,$categoryID: ID!, $discussionsCount: Int) {
   repository(owner: $owner, name: $name) {
     discussions(categoryId: $categoryID last:$discussionsCount) {
       edges {
