@@ -970,13 +970,13 @@ export type BranchActorAllowanceActor = App | Team | User;
 export type BranchNamePatternParameters = {
     __typename?: 'BranchNamePatternParameters';
     /** How this rule will appear to users. */
-    name?: Maybe<Scalars['String']>;
+    name: Scalars['String'];
     /** If true, the rule will fail if the pattern matches. */
     negate: Scalars['Boolean'];
     /** The operator to use for matching. */
-    operator: Scalars['String'];
+    operator?: Maybe<Scalars['String']>;
     /** The pattern to match with. */
-    pattern: Scalars['String'];
+    pattern?: Maybe<Scalars['String']>;
 };
 /** Parameters to be used for the branch_name_pattern rule */
 export type BranchNamePatternParametersInput = {
@@ -2230,13 +2230,13 @@ export type CommitAuthor = {
 export type CommitAuthorEmailPatternParameters = {
     __typename?: 'CommitAuthorEmailPatternParameters';
     /** How this rule will appear to users. */
-    name?: Maybe<Scalars['String']>;
+    name: Scalars['String'];
     /** If true, the rule will fail if the pattern matches. */
     negate: Scalars['Boolean'];
     /** The operator to use for matching. */
-    operator: Scalars['String'];
+    operator?: Maybe<Scalars['String']>;
     /** The pattern to match with. */
-    pattern: Scalars['String'];
+    pattern?: Maybe<Scalars['String']>;
 };
 /** Parameters to be used for the commit_author_email_pattern rule */
 export type CommitAuthorEmailPatternParametersInput = {
@@ -2449,13 +2449,13 @@ export type CommitMessage = {
 export type CommitMessagePatternParameters = {
     __typename?: 'CommitMessagePatternParameters';
     /** How this rule will appear to users. */
-    name?: Maybe<Scalars['String']>;
+    name: Scalars['String'];
     /** If true, the rule will fail if the pattern matches. */
     negate: Scalars['Boolean'];
     /** The operator to use for matching. */
-    operator: Scalars['String'];
+    operator?: Maybe<Scalars['String']>;
     /** The pattern to match with. */
-    pattern: Scalars['String'];
+    pattern?: Maybe<Scalars['String']>;
 };
 /** Parameters to be used for the commit_message_pattern rule */
 export type CommitMessagePatternParametersInput = {
@@ -2505,13 +2505,13 @@ export type CommittableBranch = {
 export type CommitterEmailPatternParameters = {
     __typename?: 'CommitterEmailPatternParameters';
     /** How this rule will appear to users. */
-    name?: Maybe<Scalars['String']>;
+    name: Scalars['String'];
     /** If true, the rule will fail if the pattern matches. */
     negate: Scalars['Boolean'];
     /** The operator to use for matching. */
-    operator: Scalars['String'];
+    operator?: Maybe<Scalars['String']>;
     /** The pattern to match with. */
-    pattern: Scalars['String'];
+    pattern?: Maybe<Scalars['String']>;
 };
 /** Parameters to be used for the committer_email_pattern rule */
 export type CommitterEmailPatternParametersInput = {
@@ -5352,7 +5352,7 @@ export type Enterprise = AnnouncementBanner & Node & {
     name: Scalars['String'];
     /** A list of organizations that belong to this enterprise. */
     organizations: OrganizationConnection;
-    /** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+    /** Enterprise information only visible to enterprise owners. */
     ownerInfo?: Maybe<EnterpriseOwnerInfo>;
     /** The HTTP path for this enterprise. */
     resourcePath: Scalars['URI'];
@@ -5569,7 +5569,7 @@ export type EnterpriseFailedInvitationEdge = {
     /** The item at the end of the edge. */
     node?: Maybe<OrganizationInvitation>;
 };
-/** An identity provider configured to provision identities for an enterprise. Visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** An identity provider configured to provision identities for an enterprise. */
 export type EnterpriseIdentityProvider = Node & {
     __typename?: 'EnterpriseIdentityProvider';
     /** The digest algorithm used to sign SAML requests for the identity provider. */
@@ -5590,7 +5590,7 @@ export type EnterpriseIdentityProvider = Node & {
     /** The URL endpoint for the identity provider's SAML SSO. */
     ssoUrl?: Maybe<Scalars['URI']>;
 };
-/** An identity provider configured to provision identities for an enterprise. Visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** An identity provider configured to provision identities for an enterprise. */
 export type EnterpriseIdentityProviderExternalIdentitiesArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5708,7 +5708,7 @@ export type EnterpriseOutsideCollaboratorEdgeRepositoriesArgs = {
     last?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<RepositoryOrder>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfo = {
     __typename?: 'EnterpriseOwnerInfo';
     /** A list of all of the administrators for this enterprise. */
@@ -5727,7 +5727,7 @@ export type EnterpriseOwnerInfo = {
     defaultRepositoryPermissionSetting: EnterpriseDefaultRepositoryPermissionSettingValue;
     /** A list of enterprise organizations configured with the provided base repository permission. */
     defaultRepositoryPermissionSettingOrganizations: OrganizationConnection;
-    /** A list of domains owned by the enterprise. Visible to enterprise owners or enterprise owners' personal access tokens (classic) with admin:enterprise scope. */
+    /** A list of domains owned by the enterprise. */
     domains: VerifiableDomainConnection;
     /** Enterprise Server installations owned by the enterprise. */
     enterpriseServerInstallations: EnterpriseServerInstallationConnection;
@@ -5735,7 +5735,7 @@ export type EnterpriseOwnerInfo = {
     failedInvitations: EnterpriseFailedInvitationConnection;
     /** The setting value for whether the enterprise has an IP allow list enabled. */
     ipAllowListEnabledSetting: IpAllowListEnabledSettingValue;
-    /** The IP addresses that are allowed to access resources owned by the enterprise. Visible to enterprise owners or enterprise owners' personal access tokens (classic) with admin:enterprise scope. */
+    /** The IP addresses that are allowed to access resources owned by the enterprise. */
     ipAllowListEntries: IpAllowListEntryConnection;
     /** The setting value for whether the enterprise has IP allow list configuration for installed GitHub Apps enabled. */
     ipAllowListForInstalledAppsEnabledSetting: IpAllowListForInstalledAppsEnabledSettingValue;
@@ -5799,7 +5799,7 @@ export type EnterpriseOwnerInfo = {
     repositoryProjectsSetting: EnterpriseEnabledDisabledSettingValue;
     /** A list of enterprise organizations configured with the provided repository projects setting value. */
     repositoryProjectsSettingOrganizations: OrganizationConnection;
-    /** The SAML Identity Provider for the enterprise. */
+    /** The SAML Identity Provider for the enterprise. When used by a GitHub App, requires an installation token with read and write access to members. */
     samlIdentityProvider?: Maybe<EnterpriseIdentityProvider>;
     /** A list of enterprise organizations configured with the SAML single sign-on setting value. */
     samlIdentityProviderSettingOrganizations: OrganizationConnection;
@@ -5814,7 +5814,7 @@ export type EnterpriseOwnerInfo = {
     /** A list of enterprise organizations configured with the two-factor authentication setting value. */
     twoFactorRequiredSettingOrganizations: OrganizationConnection;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoAdminsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5826,14 +5826,14 @@ export type EnterpriseOwnerInfoAdminsArgs = {
     query?: InputMaybe<Scalars['String']>;
     role?: InputMaybe<EnterpriseAdministratorRole>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoAffiliatedUsersWithTwoFactorDisabledArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
     first?: InputMaybe<Scalars['Int']>;
     last?: InputMaybe<Scalars['Int']>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoAllowPrivateRepositoryForkingSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5842,7 +5842,7 @@ export type EnterpriseOwnerInfoAllowPrivateRepositoryForkingSettingOrganizations
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoDefaultRepositoryPermissionSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5851,7 +5851,7 @@ export type EnterpriseOwnerInfoDefaultRepositoryPermissionSettingOrganizationsAr
     orderBy?: InputMaybe<OrganizationOrder>;
     value: DefaultRepositoryPermissionField;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoDomainsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5861,7 +5861,7 @@ export type EnterpriseOwnerInfoDomainsArgs = {
     last?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<VerifiableDomainOrder>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoEnterpriseServerInstallationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5870,7 +5870,7 @@ export type EnterpriseOwnerInfoEnterpriseServerInstallationsArgs = {
     last?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<EnterpriseServerInstallationOrder>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoFailedInvitationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5878,7 +5878,7 @@ export type EnterpriseOwnerInfoFailedInvitationsArgs = {
     last?: InputMaybe<Scalars['Int']>;
     query?: InputMaybe<Scalars['String']>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoIpAllowListEntriesArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5886,7 +5886,7 @@ export type EnterpriseOwnerInfoIpAllowListEntriesArgs = {
     last?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<IpAllowListEntryOrder>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoMembersCanChangeRepositoryVisibilitySettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5895,7 +5895,7 @@ export type EnterpriseOwnerInfoMembersCanChangeRepositoryVisibilitySettingOrgani
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoMembersCanCreateRepositoriesSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5904,7 +5904,7 @@ export type EnterpriseOwnerInfoMembersCanCreateRepositoriesSettingOrganizationsA
     orderBy?: InputMaybe<OrganizationOrder>;
     value: OrganizationMembersCanCreateRepositoriesSettingValue;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoMembersCanDeleteIssuesSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5913,7 +5913,7 @@ export type EnterpriseOwnerInfoMembersCanDeleteIssuesSettingOrganizationsArgs = 
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoMembersCanDeleteRepositoriesSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5922,7 +5922,7 @@ export type EnterpriseOwnerInfoMembersCanDeleteRepositoriesSettingOrganizationsA
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoMembersCanInviteCollaboratorsSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5931,7 +5931,7 @@ export type EnterpriseOwnerInfoMembersCanInviteCollaboratorsSettingOrganizations
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoMembersCanUpdateProtectedBranchesSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5940,7 +5940,7 @@ export type EnterpriseOwnerInfoMembersCanUpdateProtectedBranchesSettingOrganizat
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoMembersCanViewDependencyInsightsSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5949,7 +5949,7 @@ export type EnterpriseOwnerInfoMembersCanViewDependencyInsightsSettingOrganizati
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoOrganizationProjectsSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5958,7 +5958,7 @@ export type EnterpriseOwnerInfoOrganizationProjectsSettingOrganizationsArgs = {
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoOutsideCollaboratorsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5971,7 +5971,7 @@ export type EnterpriseOwnerInfoOutsideCollaboratorsArgs = {
     query?: InputMaybe<Scalars['String']>;
     visibility?: InputMaybe<RepositoryVisibility>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoPendingAdminInvitationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5981,7 +5981,7 @@ export type EnterpriseOwnerInfoPendingAdminInvitationsArgs = {
     query?: InputMaybe<Scalars['String']>;
     role?: InputMaybe<EnterpriseAdministratorRole>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoPendingCollaboratorInvitationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -5990,7 +5990,7 @@ export type EnterpriseOwnerInfoPendingCollaboratorInvitationsArgs = {
     orderBy?: InputMaybe<RepositoryInvitationOrder>;
     query?: InputMaybe<Scalars['String']>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoPendingMemberInvitationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -6000,7 +6000,7 @@ export type EnterpriseOwnerInfoPendingMemberInvitationsArgs = {
     organizationLogins?: InputMaybe<Array<Scalars['String']>>;
     query?: InputMaybe<Scalars['String']>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoRepositoryProjectsSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -6009,7 +6009,7 @@ export type EnterpriseOwnerInfoRepositoryProjectsSettingOrganizationsArgs = {
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoSamlIdentityProviderSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -6018,7 +6018,7 @@ export type EnterpriseOwnerInfoSamlIdentityProviderSettingOrganizationsArgs = {
     orderBy?: InputMaybe<OrganizationOrder>;
     value: IdentityProviderConfigurationState;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoSupportEntitlementsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -6026,7 +6026,7 @@ export type EnterpriseOwnerInfoSupportEntitlementsArgs = {
     last?: InputMaybe<Scalars['Int']>;
     orderBy?: InputMaybe<EnterpriseMemberOrder>;
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoTeamDiscussionsSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -6035,7 +6035,7 @@ export type EnterpriseOwnerInfoTeamDiscussionsSettingOrganizationsArgs = {
     orderBy?: InputMaybe<OrganizationOrder>;
     value: Scalars['Boolean'];
 };
-/** Enterprise information visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** Enterprise information only visible to enterprise owners. */
 export type EnterpriseOwnerInfoTwoFactorRequiredSettingOrganizationsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -6465,7 +6465,7 @@ export type EnvironmentEdge = {
     /** The item at the end of the edge. */
     node?: Maybe<Environment>;
 };
-/** An external identity provisioned by SAML SSO or SCIM. If SAML is configured on the organization, the external identity is visible to (1) organization owners, (2) organization owners' personal access tokens (classic) with read:org or admin:org scope, (3) GitHub App with an installation token with read or write access to members. If SAML is configured on the enterprise, the external identity is visible to (1) enterprise owners, (2) enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** An external identity provisioned by SAML SSO or SCIM. */
 export type ExternalIdentity = Node & {
     __typename?: 'ExternalIdentity';
     /** The GUID for this identity */
@@ -7797,33 +7797,14 @@ export type IssueTemplate = {
     __typename?: 'IssueTemplate';
     /** The template purpose. */
     about?: Maybe<Scalars['String']>;
-    /** The suggested assignees. */
-    assignees: UserConnection;
     /** The suggested issue body. */
     body?: Maybe<Scalars['String']>;
     /** The template filename. */
     filename: Scalars['String'];
-    /** The suggested issue labels */
-    labels?: Maybe<LabelConnection>;
     /** The template name. */
     name: Scalars['String'];
     /** The suggested issue title. */
     title?: Maybe<Scalars['String']>;
-};
-/** A repository issue template. */
-export type IssueTemplateAssigneesArgs = {
-    after?: InputMaybe<Scalars['String']>;
-    before?: InputMaybe<Scalars['String']>;
-    first?: InputMaybe<Scalars['Int']>;
-    last?: InputMaybe<Scalars['Int']>;
-};
-/** A repository issue template. */
-export type IssueTemplateLabelsArgs = {
-    after?: InputMaybe<Scalars['String']>;
-    before?: InputMaybe<Scalars['String']>;
-    first?: InputMaybe<Scalars['Int']>;
-    last?: InputMaybe<Scalars['Int']>;
-    orderBy?: InputMaybe<LabelOrder>;
 };
 /** The connection type for IssueTimelineItem. */
 export type IssueTimelineConnection = {
@@ -8982,8 +8963,6 @@ export type Migration = {
     sourceUrl: Scalars['URI'];
     /** The migration state. */
     state: MigrationState;
-    /** The number of warnings encountered for this migration. To review the warnings, check the [Migration Log](https://docs.github.com/en/migrations/using-github-enterprise-importer/completing-your-migration-with-github-enterprise-importer/accessing-your-migration-logs-for-github-enterprise-importer). */
-    warningsCount: Scalars['Int'];
 };
 /** A GitHub Enterprise Importer (GEI) migration source. */
 export type MigrationSource = Node & {
@@ -10551,7 +10530,7 @@ export declare enum NotificationRestrictionSettingValue {
     /** The setting is enabled for the owner. */
     Enabled = "ENABLED"
 }
-/** An OIDC identity provider configured to provision identities for an enterprise. Visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** An OIDC identity provider configured to provision identities for an enterprise. */
 export type OidcProvider = Node & {
     __typename?: 'OIDCProvider';
     /** The enterprise this identity provider belongs to. */
@@ -10564,7 +10543,7 @@ export type OidcProvider = Node & {
     /** The id of the tenant this provider is attached to */
     tenantId: Scalars['String'];
 };
-/** An OIDC identity provider configured to provision identities for an enterprise. Visible to enterprise owners or enterprise owners' personal access tokens (classic) with read:enterprise or admin:enterprise scope. */
+/** An OIDC identity provider configured to provision identities for an enterprise. */
 export type OidcProviderExternalIdentitiesArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -12064,11 +12043,9 @@ export type Organization = Actor & AnnouncementBanner & MemberStatusable & Node 
     requiresTwoFactorAuthentication?: Maybe<Scalars['Boolean']>;
     /** The HTTP path for this organization. */
     resourcePath: Scalars['URI'];
-    /** Returns a single ruleset from the current organization by ID. */
-    ruleset?: Maybe<RepositoryRuleset>;
     /** A list of rulesets for this organization. */
     rulesets?: Maybe<RepositoryRulesetConnection>;
-    /** The Organization's SAML identity provider. Visible to (1) organization owners, (2) organization owners' personal access tokens (classic) with read:org or admin:org scope, (3) GitHub App with an installation token with read or write access to members. */
+    /** The Organization's SAML identity providers */
     samlIdentityProvider?: Maybe<OrganizationIdentityProvider>;
     /** List of users and organizations this entity is sponsoring. */
     sponsoring: SponsorConnection;
@@ -12316,10 +12293,6 @@ export type OrganizationRepositoryMigrationsArgs = {
     state?: InputMaybe<MigrationState>;
 };
 /** An account on GitHub, with one or more owners, that has repositories, members and teams. */
-export type OrganizationRulesetArgs = {
-    databaseId: Scalars['Int'];
-};
-/** An account on GitHub, with one or more owners, that has repositories, members and teams. */
 export type OrganizationRulesetsArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -12493,7 +12466,7 @@ export type OrganizationEnterpriseOwnerEdge = {
     /** The role of the owner with respect to the organization. */
     organizationRole: RoleInOrganization;
 };
-/** An Identity Provider configured to provision SAML and SCIM identities for Organizations. Visible to (1) organization owners, (2) organization owners' personal access tokens (classic) with read:org or admin:org scope, (3) GitHub App with an installation token with read or write access to members. */
+/** An Identity Provider configured to provision SAML and SCIM identities for Organizations */
 export type OrganizationIdentityProvider = Node & {
     __typename?: 'OrganizationIdentityProvider';
     /** The digest algorithm used to sign SAML requests for the Identity Provider. */
@@ -12512,7 +12485,7 @@ export type OrganizationIdentityProvider = Node & {
     /** The URL endpoint for the Identity Provider's SAML SSO. */
     ssoUrl?: Maybe<Scalars['URI']>;
 };
-/** An Identity Provider configured to provision SAML and SCIM identities for Organizations. Visible to (1) organization owners, (2) organization owners' personal access tokens (classic) with read:org or admin:org scope, (3) GitHub App with an installation token with read or write access to members. */
+/** An Identity Provider configured to provision SAML and SCIM identities for Organizations */
 export type OrganizationIdentityProviderExternalIdentitiesArgs = {
     after?: InputMaybe<Scalars['String']>;
     before?: InputMaybe<Scalars['String']>;
@@ -13955,9 +13928,9 @@ export type ProjectV2Item = Node & {
     creator?: Maybe<Actor>;
     /** Identifies the primary key from the database. */
     databaseId?: Maybe<Scalars['Int']>;
-    /** The field value of the first project field which matches the 'name' argument that is set on the item. */
+    /** A specific field value given a field name */
     fieldValueByName?: Maybe<ProjectV2ItemFieldValue>;
-    /** The field values that are set on the item. */
+    /** List of field values */
     fieldValues: ProjectV2ItemFieldValueConnection;
     id: Scalars['ID'];
     /** Whether the item is archived. */
@@ -15265,21 +15238,21 @@ export declare enum PullRequestOrderField {
     /** Order pull_requests by update time */
     UpdatedAt = "UPDATED_AT"
 }
-/** Require all commits be made to a non-target branch and submitted via a pull request before they can be merged. */
+/** Parameters to be used for the pull_request rule */
 export type PullRequestParameters = {
     __typename?: 'PullRequestParameters';
     /** New, reviewable commits pushed will dismiss previous pull request review approvals. */
-    dismissStaleReviewsOnPush: Scalars['Boolean'];
+    dismissStaleReviewsOnPush?: Maybe<Scalars['Boolean']>;
     /** Require an approving review in pull requests that modify files that have a designated code owner. */
-    requireCodeOwnerReview: Scalars['Boolean'];
+    requireCodeOwnerReview?: Maybe<Scalars['Boolean']>;
     /** Whether the most recent reviewable push must be approved by someone other than the person who pushed it. */
-    requireLastPushApproval: Scalars['Boolean'];
+    requireLastPushApproval?: Maybe<Scalars['Boolean']>;
     /** The number of approving reviews that are required before a pull request can be merged. */
-    requiredApprovingReviewCount: Scalars['Int'];
+    requiredApprovingReviewCount?: Maybe<Scalars['Int']>;
     /** All conversations on code must be resolved before a pull request can be merged. */
-    requiredReviewThreadResolution: Scalars['Boolean'];
+    requiredReviewThreadResolution?: Maybe<Scalars['Boolean']>;
 };
-/** Require all commits be made to a non-target branch and submitted via a pull request before they can be merged. */
+/** Parameters to be used for the pull_request rule */
 export type PullRequestParametersInput = {
     /** New, reviewable commits pushed will dismiss previous pull request review approvals. */
     dismissStaleReviewsOnPush: Scalars['Boolean'];
@@ -16003,7 +15976,7 @@ export type Query = {
     organization?: Maybe<Organization>;
     /** The client's rate limit information. */
     rateLimit?: Maybe<RateLimit>;
-    /** Workaround for re-exposing the root query object. (Refer to https://github.com/facebook/relay/issues/112 for more information.) */
+    /** Hack to workaround https://github.com/facebook/relay/issues/112 re-exposing the root query object */
     relay: Query;
     /** Lookup a given repository by the owner and repository name. */
     repository?: Maybe<Repository>;
@@ -16428,9 +16401,9 @@ export type RefEdge = {
 export type RefNameConditionTarget = {
     __typename?: 'RefNameConditionTarget';
     /** Array of ref names or patterns to exclude. The condition will not pass if any of these patterns match. */
-    exclude: Array<Scalars['String']>;
+    exclude?: Maybe<Array<Scalars['String']>>;
     /** Array of ref names or patterns to include. One of these patterns must match for the condition to pass. Also accepts `~DEFAULT_BRANCH` to include the default branch or `~ALL` to include all branches. */
-    include: Array<Scalars['String']>;
+    include?: Maybe<Array<Scalars['String']>>;
 };
 /** Parameters to be used for the ref_name condition */
 export type RefNameConditionTargetInput = {
@@ -18204,8 +18177,6 @@ export type Repository = Node & PackageOwner & ProjectOwner & ProjectV2Recent & 
     repositoryTopics: RepositoryTopicConnection;
     /** The HTTP path for this repository */
     resourcePath: Scalars['URI'];
-    /** Returns a single ruleset from the current repository by ID. */
-    ruleset?: Maybe<RepositoryRuleset>;
     /** A list of rulesets for this repository. */
     rulesets?: Maybe<RepositoryRulesetConnection>;
     /** The security policy URL. */
@@ -18555,10 +18526,6 @@ export type RepositoryRepositoryTopicsArgs = {
     before?: InputMaybe<Scalars['String']>;
     first?: InputMaybe<Scalars['Int']>;
     last?: InputMaybe<Scalars['Int']>;
-};
-/** A repository contains the content for a project. */
-export type RepositoryRulesetArgs = {
-    databaseId: Scalars['Int'];
 };
 /** A repository contains the content for a project. */
 export type RepositoryRulesetsArgs = {
@@ -18945,8 +18912,6 @@ export type RepositoryMigration = Migration & Node & {
     sourceUrl: Scalars['URI'];
     /** The migration state. */
     state: MigrationState;
-    /** The number of warnings encountered for this migration. To review the warnings, check the [Migration Log](https://docs.github.com/en/migrations/using-github-enterprise-importer/completing-your-migration-with-github-enterprise-importer/accessing-your-migration-logs-for-github-enterprise-importer). */
-    warningsCount: Scalars['Int'];
 };
 /** The connection type for RepositoryMigration. */
 export type RepositoryMigrationConnection = {
@@ -18991,9 +18956,9 @@ export declare enum RepositoryMigrationOrderField {
 export type RepositoryNameConditionTarget = {
     __typename?: 'RepositoryNameConditionTarget';
     /** Array of repository names or patterns to exclude. The condition will not pass if any of these patterns match. */
-    exclude: Array<Scalars['String']>;
+    exclude?: Maybe<Array<Scalars['String']>>;
     /** Array of repository names or patterns to include. One of these patterns must match for the condition to pass. Also accepts `~ALL` to include all repositories. */
-    include: Array<Scalars['String']>;
+    include?: Maybe<Array<Scalars['String']>>;
     /** Target changes that match these patterns will be prevented except by those with bypass permissions. */
     protected: Scalars['Boolean'];
 };
@@ -19152,25 +19117,25 @@ export declare enum RepositoryRuleType {
     CommitAuthorEmailPattern = "COMMIT_AUTHOR_EMAIL_PATTERN",
     /** Commit message pattern */
     CommitMessagePattern = "COMMIT_MESSAGE_PATTERN",
-    /** Only allow users with bypass permission to create matching refs. */
+    /** Creation */
     Creation = "CREATION",
-    /** Only allow users with bypass permissions to delete matching refs. */
+    /** Deletion */
     Deletion = "DELETION",
-    /** Prevent users with push access from force pushing to branches. */
+    /** Non fast forward */
     NonFastForward = "NON_FAST_FORWARD",
-    /** Require all commits be made to a non-target branch and submitted via a pull request before they can be merged. */
+    /** Pull request */
     PullRequest = "PULL_REQUEST",
-    /** Choose which environments must be successfully deployed to before branches can be merged into a branch that matches this rule. */
+    /** Required deployments */
     RequiredDeployments = "REQUIRED_DEPLOYMENTS",
-    /** Prevent merge commits from being pushed to matching branches. */
+    /** Required linear history */
     RequiredLinearHistory = "REQUIRED_LINEAR_HISTORY",
-    /** Commits pushed to matching branches must have verified signatures. */
+    /** Required signatures */
     RequiredSignatures = "REQUIRED_SIGNATURES",
-    /** Choose which status checks must pass before branches can be merged into a branch that matches this rule. When enabled, commits must first be pushed to another branch, then merged or pushed directly to a branch that matches this rule after status checks have passed. */
+    /** Required status checks */
     RequiredStatusChecks = "REQUIRED_STATUS_CHECKS",
     /** Tag name pattern */
     TagNamePattern = "TAG_NAME_PATTERN",
-    /** Only allow users with bypass permission to update matching refs. */
+    /** Update */
     Update = "UPDATE"
 }
 /** A repository ruleset. */
@@ -19182,8 +19147,6 @@ export type RepositoryRuleset = Node & {
     bypassMode: RuleBypassMode;
     /** The set of conditions that must evaluate to true for this ruleset to apply */
     conditions: RepositoryRuleConditions;
-    /** Identifies the date and time when the object was created. */
-    createdAt: Scalars['DateTime'];
     /** Identifies the primary key from the database. */
     databaseId?: Maybe<Scalars['Int']>;
     /** The enforcement level of this ruleset */
@@ -19197,8 +19160,6 @@ export type RepositoryRuleset = Node & {
     source: RuleSource;
     /** Target of the ruleset. */
     target?: Maybe<RepositoryRulesetTarget>;
-    /** Identifies the date and time when the object was last updated. */
-    updatedAt: Scalars['DateTime'];
 };
 /** A repository ruleset. */
 export type RepositoryRulesetBypassActorsArgs = {
@@ -19548,13 +19509,13 @@ export type RequirableByPullRequestIsRequiredArgs = {
     pullRequestId?: InputMaybe<Scalars['ID']>;
     pullRequestNumber?: InputMaybe<Scalars['Int']>;
 };
-/** Choose which environments must be successfully deployed to before branches can be merged into a branch that matches this rule. */
+/** Parameters to be used for the required_deployments rule */
 export type RequiredDeploymentsParameters = {
     __typename?: 'RequiredDeploymentsParameters';
     /** The environments that must be successfully deployed to before branches can be merged. */
-    requiredDeploymentEnvironments: Array<Scalars['String']>;
+    requiredDeploymentEnvironments?: Maybe<Array<Scalars['String']>>;
 };
-/** Choose which environments must be successfully deployed to before branches can be merged into a branch that matches this rule. */
+/** Parameters to be used for the required_deployments rule */
 export type RequiredDeploymentsParametersInput = {
     /** The environments that must be successfully deployed to before branches can be merged. */
     requiredDeploymentEnvironments: Array<Scalars['String']>;
@@ -19574,15 +19535,15 @@ export type RequiredStatusCheckInput = {
     /** Status check context that must pass for commits to be accepted to the matching branch. */
     context: Scalars['String'];
 };
-/** Choose which status checks must pass before branches can be merged into a branch that matches this rule. When enabled, commits must first be pushed to another branch, then merged or pushed directly to a branch that matches this rule after status checks have passed. */
+/** Parameters to be used for the required_status_checks rule */
 export type RequiredStatusChecksParameters = {
     __typename?: 'RequiredStatusChecksParameters';
     /** Status checks that are required. */
-    requiredStatusChecks: Array<StatusCheckConfiguration>;
+    requiredStatusChecks?: Maybe<Array<StatusCheckConfiguration>>;
     /** Whether pull requests targeting a matching branch must be tested with the latest code. This setting will not take effect unless at least one status check is enabled. */
-    strictRequiredStatusChecksPolicy: Scalars['Boolean'];
+    strictRequiredStatusChecksPolicy?: Maybe<Scalars['Boolean']>;
 };
-/** Choose which status checks must pass before branches can be merged into a branch that matches this rule. When enabled, commits must first be pushed to another branch, then merged or pushed directly to a branch that matches this rule after status checks have passed. */
+/** Parameters to be used for the required_status_checks rule */
 export type RequiredStatusChecksParametersInput = {
     /** Status checks that are required. */
     requiredStatusChecks: Array<StatusCheckConfigurationInput>;
@@ -21682,9 +21643,9 @@ export type StatusContextArgs = {
 export type StatusCheckConfiguration = {
     __typename?: 'StatusCheckConfiguration';
     /** The status check context name that must be present on the commit. */
-    context: Scalars['String'];
+    context?: Maybe<Scalars['String']>;
     /** The optional integration ID that this status check must originate from. */
-    integrationId?: Maybe<Scalars['Int']>;
+    integrationId: Scalars['Int'];
 };
 /** Required status check */
 export type StatusCheckConfigurationInput = {
@@ -21934,13 +21895,13 @@ export type Tag = GitObject & Node & {
 export type TagNamePatternParameters = {
     __typename?: 'TagNamePatternParameters';
     /** How this rule will appear to users. */
-    name?: Maybe<Scalars['String']>;
+    name: Scalars['String'];
     /** If true, the rule will fail if the pattern matches. */
     negate: Scalars['Boolean'];
     /** The operator to use for matching. */
-    operator: Scalars['String'];
+    operator?: Maybe<Scalars['String']>;
     /** The pattern to match with. */
-    pattern: Scalars['String'];
+    pattern?: Maybe<Scalars['String']>;
 };
 /** Parameters to be used for the tag_name_pattern rule */
 export type TagNamePatternParametersInput = {
@@ -24002,13 +23963,13 @@ export type UpdateOrganizationWebCommitSignoffSettingPayload = {
     /** The organization with the updated web commit signoff setting. */
     organization?: Maybe<Organization>;
 };
-/** Only allow users with bypass permission to update matching refs. */
+/** Parameters to be used for the update rule */
 export type UpdateParameters = {
     __typename?: 'UpdateParameters';
     /** Branch can pull changes from its upstream repository */
-    updateAllowsFetchAndMerge: Scalars['Boolean'];
+    updateAllowsFetchAndMerge?: Maybe<Scalars['Boolean']>;
 };
-/** Only allow users with bypass permission to update matching refs. */
+/** Parameters to be used for the update rule */
 export type UpdateParametersInput = {
     /** Branch can pull changes from its upstream repository */
     updateAllowsFetchAndMerge: Scalars['Boolean'];
@@ -24531,7 +24492,7 @@ export type User = Actor & Node & PackageOwner & ProfileOwner & ProjectOwner & P
     isDeveloperProgramMember: Scalars['Boolean'];
     /** Whether or not this user is a GitHub employee. */
     isEmployee: Scalars['Boolean'];
-    /** Whether or not this user is following the viewer. Inverse of viewerIsFollowing */
+    /** Whether or not this user is following the viewer. Inverse of viewer_is_following */
     isFollowingViewer: Scalars['Boolean'];
     /** Whether or not this user is a member of the GitHub Stars Program. */
     isGitHubStar: Scalars['Boolean'];
@@ -24652,7 +24613,7 @@ export type User = Actor & Node & PackageOwner & ProfileOwner & ProjectOwner & P
     viewerCanFollow: Scalars['Boolean'];
     /** Whether or not the viewer is able to sponsor this user/organization. */
     viewerCanSponsor: Scalars['Boolean'];
-    /** Whether or not this user is followed by the viewer. Inverse of isFollowingViewer. */
+    /** Whether or not this user is followed by the viewer. Inverse of is_following_viewer. */
     viewerIsFollowing: Scalars['Boolean'];
     /** True if the viewer is sponsoring this user/organization. */
     viewerIsSponsoring: Scalars['Boolean'];
@@ -25264,7 +25225,7 @@ export type Votable = {
     viewerHasUpvoted: Scalars['Boolean'];
 };
 /** A workflow contains meta information about an Actions workflow file. */
-export type Workflow = Node & UniformResourceLocatable & {
+export type Workflow = Node & {
     __typename?: 'Workflow';
     /** Identifies the date and time when the object was created. */
     createdAt: Scalars['DateTime'];
@@ -25273,16 +25234,12 @@ export type Workflow = Node & UniformResourceLocatable & {
     id: Scalars['ID'];
     /** The name of the workflow. */
     name: Scalars['String'];
-    /** The HTTP path for this workflow */
-    resourcePath: Scalars['URI'];
     /** The runs of the workflow. */
     runs: WorkflowRunConnection;
     /** The state of the workflow. */
     state: WorkflowState;
     /** Identifies the date and time when the object was last updated. */
     updatedAt: Scalars['DateTime'];
-    /** The HTTP URL for this workflow */
-    url: Scalars['URI'];
 };
 /** A workflow contains meta information about an Actions workflow file. */
 export type WorkflowRunsArgs = {
@@ -27555,7 +27512,7 @@ export type ResolversTypes = {
     UnfollowOrganizationPayload: ResolverTypeWrapper<UnfollowOrganizationPayload>;
     UnfollowUserInput: UnfollowUserInput;
     UnfollowUserPayload: ResolverTypeWrapper<UnfollowUserPayload>;
-    UniformResourceLocatable: ResolversTypes['Bot'] | ResolversTypes['CheckRun'] | ResolversTypes['ClosedEvent'] | ResolversTypes['Commit'] | ResolversTypes['ConvertToDraftEvent'] | ResolversTypes['CrossReferencedEvent'] | ResolversTypes['Gist'] | ResolversTypes['Issue'] | ResolversTypes['Mannequin'] | ResolversTypes['MergedEvent'] | ResolversTypes['Milestone'] | ResolversTypes['Organization'] | ResolversTypes['PullRequest'] | ResolversTypes['PullRequestCommit'] | ResolversTypes['ReadyForReviewEvent'] | ResolversTypes['Release'] | ResolversTypes['Repository'] | ResolversTypes['RepositoryTopic'] | ResolversTypes['ReviewDismissedEvent'] | ResolversTypes['TeamDiscussion'] | ResolversTypes['TeamDiscussionComment'] | ResolversTypes['User'] | ResolversTypes['Workflow'] | ResolversTypes['WorkflowRun'];
+    UniformResourceLocatable: ResolversTypes['Bot'] | ResolversTypes['CheckRun'] | ResolversTypes['ClosedEvent'] | ResolversTypes['Commit'] | ResolversTypes['ConvertToDraftEvent'] | ResolversTypes['CrossReferencedEvent'] | ResolversTypes['Gist'] | ResolversTypes['Issue'] | ResolversTypes['Mannequin'] | ResolversTypes['MergedEvent'] | ResolversTypes['Milestone'] | ResolversTypes['Organization'] | ResolversTypes['PullRequest'] | ResolversTypes['PullRequestCommit'] | ResolversTypes['ReadyForReviewEvent'] | ResolversTypes['Release'] | ResolversTypes['Repository'] | ResolversTypes['RepositoryTopic'] | ResolversTypes['ReviewDismissedEvent'] | ResolversTypes['TeamDiscussion'] | ResolversTypes['TeamDiscussionComment'] | ResolversTypes['User'] | ResolversTypes['WorkflowRun'];
     UnknownSignature: ResolverTypeWrapper<UnknownSignature>;
     UnlabeledEvent: ResolverTypeWrapper<UnlabeledEvent>;
     UnlinkProjectV2FromRepositoryInput: UnlinkProjectV2FromRepositoryInput;
@@ -29098,7 +29055,7 @@ export type ResolversParentTypes = {
     UnfollowOrganizationPayload: UnfollowOrganizationPayload;
     UnfollowUserInput: UnfollowUserInput;
     UnfollowUserPayload: UnfollowUserPayload;
-    UniformResourceLocatable: ResolversParentTypes['Bot'] | ResolversParentTypes['CheckRun'] | ResolversParentTypes['ClosedEvent'] | ResolversParentTypes['Commit'] | ResolversParentTypes['ConvertToDraftEvent'] | ResolversParentTypes['CrossReferencedEvent'] | ResolversParentTypes['Gist'] | ResolversParentTypes['Issue'] | ResolversParentTypes['Mannequin'] | ResolversParentTypes['MergedEvent'] | ResolversParentTypes['Milestone'] | ResolversParentTypes['Organization'] | ResolversParentTypes['PullRequest'] | ResolversParentTypes['PullRequestCommit'] | ResolversParentTypes['ReadyForReviewEvent'] | ResolversParentTypes['Release'] | ResolversParentTypes['Repository'] | ResolversParentTypes['RepositoryTopic'] | ResolversParentTypes['ReviewDismissedEvent'] | ResolversParentTypes['TeamDiscussion'] | ResolversParentTypes['TeamDiscussionComment'] | ResolversParentTypes['User'] | ResolversParentTypes['Workflow'] | ResolversParentTypes['WorkflowRun'];
+    UniformResourceLocatable: ResolversParentTypes['Bot'] | ResolversParentTypes['CheckRun'] | ResolversParentTypes['ClosedEvent'] | ResolversParentTypes['Commit'] | ResolversParentTypes['ConvertToDraftEvent'] | ResolversParentTypes['CrossReferencedEvent'] | ResolversParentTypes['Gist'] | ResolversParentTypes['Issue'] | ResolversParentTypes['Mannequin'] | ResolversParentTypes['MergedEvent'] | ResolversParentTypes['Milestone'] | ResolversParentTypes['Organization'] | ResolversParentTypes['PullRequest'] | ResolversParentTypes['PullRequestCommit'] | ResolversParentTypes['ReadyForReviewEvent'] | ResolversParentTypes['Release'] | ResolversParentTypes['Repository'] | ResolversParentTypes['RepositoryTopic'] | ResolversParentTypes['ReviewDismissedEvent'] | ResolversParentTypes['TeamDiscussion'] | ResolversParentTypes['TeamDiscussionComment'] | ResolversParentTypes['User'] | ResolversParentTypes['WorkflowRun'];
     UnknownSignature: UnknownSignature;
     UnlabeledEvent: UnlabeledEvent;
     UnlinkProjectV2FromRepositoryInput: UnlinkProjectV2FromRepositoryInput;
@@ -29633,10 +29590,10 @@ export type BranchActorAllowanceActorResolvers<ContextType = any, ParentType ext
     __resolveType: TypeResolveFn<'App' | 'Team' | 'User', ParentType, ContextType>;
 };
 export type BranchNamePatternParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['BranchNamePatternParameters'] = ResolversParentTypes['BranchNamePatternParameters']> = {
-    name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     negate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    operator?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    pattern?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+    operator?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    pattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type BranchProtectionRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['BranchProtectionRule'] = ResolversParentTypes['BranchProtectionRule']> = {
@@ -30058,10 +30015,10 @@ export type CommitResolvers<ContextType = any, ParentType extends ResolversParen
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type CommitAuthorEmailPatternParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommitAuthorEmailPatternParameters'] = ResolversParentTypes['CommitAuthorEmailPatternParameters']> = {
-    name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     negate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    operator?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    pattern?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+    operator?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    pattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type CommitCommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommitComment'] = ResolversParentTypes['CommitComment']> = {
@@ -30146,17 +30103,17 @@ export type CommitHistoryConnectionResolvers<ContextType = any, ParentType exten
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type CommitMessagePatternParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommitMessagePatternParameters'] = ResolversParentTypes['CommitMessagePatternParameters']> = {
-    name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     negate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    operator?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    pattern?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+    operator?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    pattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type CommitterEmailPatternParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommitterEmailPatternParameters'] = ResolversParentTypes['CommitterEmailPatternParameters']> = {
-    name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     negate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    operator?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    pattern?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+    operator?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    pattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type ComparisonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comparison'] = ResolversParentTypes['Comparison']> = {
@@ -31902,10 +31859,8 @@ export type IssueOrPullRequestResolvers<ContextType = any, ParentType extends Re
 };
 export type IssueTemplateResolvers<ContextType = any, ParentType extends ResolversParentTypes['IssueTemplate'] = ResolversParentTypes['IssueTemplate']> = {
     about?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-    assignees?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, Partial<IssueTemplateAssigneesArgs>>;
     body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     filename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    labels?: Resolver<Maybe<ResolversTypes['LabelConnection']>, ParentType, ContextType, RequireFields<IssueTemplateLabelsArgs, 'orderBy'>>;
     name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -32383,7 +32338,6 @@ export type MigrationResolvers<ContextType = any, ParentType extends ResolversPa
     repositoryName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     sourceUrl?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
     state?: Resolver<ResolversTypes['MigrationState'], ParentType, ContextType>;
-    warningsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
 };
 export type MigrationSourceResolvers<ContextType = any, ParentType extends ResolversParentTypes['MigrationSource'] = ResolversParentTypes['MigrationSource']> = {
     id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -33403,7 +33357,6 @@ export type OrganizationResolvers<ContextType = any, ParentType extends Resolver
     repositoryMigrations?: Resolver<ResolversTypes['RepositoryMigrationConnection'], ParentType, ContextType, RequireFields<OrganizationRepositoryMigrationsArgs, 'orderBy'>>;
     requiresTwoFactorAuthentication?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
     resourcePath?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
-    ruleset?: Resolver<Maybe<ResolversTypes['RepositoryRuleset']>, ParentType, ContextType, RequireFields<OrganizationRulesetArgs, 'databaseId'>>;
     rulesets?: Resolver<Maybe<ResolversTypes['RepositoryRulesetConnection']>, ParentType, ContextType, RequireFields<OrganizationRulesetsArgs, 'includeParents'>>;
     samlIdentityProvider?: Resolver<Maybe<ResolversTypes['OrganizationIdentityProvider']>, ParentType, ContextType>;
     sponsoring?: Resolver<ResolversTypes['SponsorConnection'], ParentType, ContextType, RequireFields<OrganizationSponsoringArgs, 'orderBy'>>;
@@ -34508,11 +34461,11 @@ export type PullRequestEdgeResolvers<ContextType = any, ParentType extends Resol
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type PullRequestParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['PullRequestParameters'] = ResolversParentTypes['PullRequestParameters']> = {
-    dismissStaleReviewsOnPush?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    requireCodeOwnerReview?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    requireLastPushApproval?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    requiredApprovingReviewCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-    requiredReviewThreadResolution?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+    dismissStaleReviewsOnPush?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+    requireCodeOwnerReview?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+    requireLastPushApproval?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+    requiredApprovingReviewCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+    requiredReviewThreadResolution?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type PullRequestReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['PullRequestReview'] = ResolversParentTypes['PullRequestReview']> = {
@@ -34895,8 +34848,8 @@ export type RefEdgeResolvers<ContextType = any, ParentType extends ResolversPare
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RefNameConditionTargetResolvers<ContextType = any, ParentType extends ResolversParentTypes['RefNameConditionTarget'] = ResolversParentTypes['RefNameConditionTarget']> = {
-    exclude?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-    include?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+    exclude?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+    include?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RefUpdateRuleResolvers<ContextType = any, ParentType extends ResolversParentTypes['RefUpdateRule'] = ResolversParentTypes['RefUpdateRule']> = {
@@ -35710,7 +35663,6 @@ export type RepositoryResolvers<ContextType = any, ParentType extends ResolversP
     releases?: Resolver<ResolversTypes['ReleaseConnection'], ParentType, ContextType, Partial<RepositoryReleasesArgs>>;
     repositoryTopics?: Resolver<ResolversTypes['RepositoryTopicConnection'], ParentType, ContextType, Partial<RepositoryRepositoryTopicsArgs>>;
     resourcePath?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
-    ruleset?: Resolver<Maybe<ResolversTypes['RepositoryRuleset']>, ParentType, ContextType, RequireFields<RepositoryRulesetArgs, 'databaseId'>>;
     rulesets?: Resolver<Maybe<ResolversTypes['RepositoryRulesetConnection']>, ParentType, ContextType, RequireFields<RepositoryRulesetsArgs, 'includeParents'>>;
     securityPolicyUrl?: Resolver<Maybe<ResolversTypes['URI']>, ParentType, ContextType>;
     shortDescriptionHTML?: Resolver<ResolversTypes['HTML'], ParentType, ContextType, RequireFields<RepositoryShortDescriptionHtmlArgs, 'limit'>>;
@@ -35879,7 +35831,6 @@ export type RepositoryMigrationResolvers<ContextType = any, ParentType extends R
     repositoryName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     sourceUrl?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
     state?: Resolver<ResolversTypes['MigrationState'], ParentType, ContextType>;
-    warningsCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RepositoryMigrationConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepositoryMigrationConnection'] = ResolversParentTypes['RepositoryMigrationConnection']> = {
@@ -35895,8 +35846,8 @@ export type RepositoryMigrationEdgeResolvers<ContextType = any, ParentType exten
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RepositoryNameConditionTargetResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepositoryNameConditionTarget'] = ResolversParentTypes['RepositoryNameConditionTarget']> = {
-    exclude?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
-    include?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+    exclude?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
+    include?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
     protected?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -35941,7 +35892,6 @@ export type RepositoryRulesetResolvers<ContextType = any, ParentType extends Res
     bypassActors?: Resolver<Maybe<ResolversTypes['RepositoryRulesetBypassActorConnection']>, ParentType, ContextType, Partial<RepositoryRulesetBypassActorsArgs>>;
     bypassMode?: Resolver<ResolversTypes['RuleBypassMode'], ParentType, ContextType>;
     conditions?: Resolver<ResolversTypes['RepositoryRuleConditions'], ParentType, ContextType>;
-    createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
     databaseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
     enforcement?: Resolver<ResolversTypes['RuleEnforcement'], ParentType, ContextType>;
     id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -35949,7 +35899,6 @@ export type RepositoryRulesetResolvers<ContextType = any, ParentType extends Res
     rules?: Resolver<Maybe<ResolversTypes['RepositoryRuleConnection']>, ParentType, ContextType, Partial<RepositoryRulesetRulesArgs>>;
     source?: Resolver<ResolversTypes['RuleSource'], ParentType, ContextType>;
     target?: Resolver<Maybe<ResolversTypes['RepositoryRulesetTarget']>, ParentType, ContextType>;
-    updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RepositoryRulesetBypassActorResolvers<ContextType = any, ParentType extends ResolversParentTypes['RepositoryRulesetBypassActor'] = ResolversParentTypes['RepositoryRulesetBypassActor']> = {
@@ -36109,7 +36058,7 @@ export type RequirableByPullRequestResolvers<ContextType = any, ParentType exten
     isRequired?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, Partial<RequirableByPullRequestIsRequiredArgs>>;
 };
 export type RequiredDeploymentsParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['RequiredDeploymentsParameters'] = ResolversParentTypes['RequiredDeploymentsParameters']> = {
-    requiredDeploymentEnvironments?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+    requiredDeploymentEnvironments?: Resolver<Maybe<Array<ResolversTypes['String']>>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RequiredStatusCheckDescriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['RequiredStatusCheckDescription'] = ResolversParentTypes['RequiredStatusCheckDescription']> = {
@@ -36118,8 +36067,8 @@ export type RequiredStatusCheckDescriptionResolvers<ContextType = any, ParentTyp
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RequiredStatusChecksParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['RequiredStatusChecksParameters'] = ResolversParentTypes['RequiredStatusChecksParameters']> = {
-    requiredStatusChecks?: Resolver<Array<ResolversTypes['StatusCheckConfiguration']>, ParentType, ContextType>;
-    strictRequiredStatusChecksPolicy?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+    requiredStatusChecks?: Resolver<Maybe<Array<ResolversTypes['StatusCheckConfiguration']>>, ParentType, ContextType>;
+    strictRequiredStatusChecksPolicy?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type RerequestCheckSuitePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['RerequestCheckSuitePayload'] = ResolversParentTypes['RerequestCheckSuitePayload']> = {
@@ -36678,8 +36627,8 @@ export type StatusResolvers<ContextType = any, ParentType extends ResolversParen
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type StatusCheckConfigurationResolvers<ContextType = any, ParentType extends ResolversParentTypes['StatusCheckConfiguration'] = ResolversParentTypes['StatusCheckConfiguration']> = {
-    context?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    integrationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+    context?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    integrationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type StatusCheckRollupResolvers<ContextType = any, ParentType extends ResolversParentTypes['StatusCheckRollup'] = ResolversParentTypes['StatusCheckRollup']> = {
@@ -36795,10 +36744,10 @@ export type TagResolvers<ContextType = any, ParentType extends ResolversParentTy
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type TagNamePatternParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['TagNamePatternParameters'] = ResolversParentTypes['TagNamePatternParameters']> = {
-    name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
     negate?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-    operator?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    pattern?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+    operator?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+    pattern?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type TeamResolvers<ContextType = any, ParentType extends ResolversParentTypes['Team'] = ResolversParentTypes['Team']> = {
@@ -37236,7 +37185,7 @@ export type UnfollowUserPayloadResolvers<ContextType = any, ParentType extends R
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type UniformResourceLocatableResolvers<ContextType = any, ParentType extends ResolversParentTypes['UniformResourceLocatable'] = ResolversParentTypes['UniformResourceLocatable']> = {
-    __resolveType: TypeResolveFn<'Bot' | 'CheckRun' | 'ClosedEvent' | 'Commit' | 'ConvertToDraftEvent' | 'CrossReferencedEvent' | 'Gist' | 'Issue' | 'Mannequin' | 'MergedEvent' | 'Milestone' | 'Organization' | 'PullRequest' | 'PullRequestCommit' | 'ReadyForReviewEvent' | 'Release' | 'Repository' | 'RepositoryTopic' | 'ReviewDismissedEvent' | 'TeamDiscussion' | 'TeamDiscussionComment' | 'User' | 'Workflow' | 'WorkflowRun', ParentType, ContextType>;
+    __resolveType: TypeResolveFn<'Bot' | 'CheckRun' | 'ClosedEvent' | 'Commit' | 'ConvertToDraftEvent' | 'CrossReferencedEvent' | 'Gist' | 'Issue' | 'Mannequin' | 'MergedEvent' | 'Milestone' | 'Organization' | 'PullRequest' | 'PullRequestCommit' | 'ReadyForReviewEvent' | 'Release' | 'Repository' | 'RepositoryTopic' | 'ReviewDismissedEvent' | 'TeamDiscussion' | 'TeamDiscussionComment' | 'User' | 'WorkflowRun', ParentType, ContextType>;
     resourcePath?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
     url?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
 };
@@ -37521,7 +37470,7 @@ export type UpdateOrganizationWebCommitSignoffSettingPayloadResolvers<ContextTyp
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type UpdateParametersResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateParameters'] = ResolversParentTypes['UpdateParameters']> = {
-    updateAllowsFetchAndMerge?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+    updateAllowsFetchAndMerge?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type UpdateProjectCardPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateProjectCardPayload'] = ResolversParentTypes['UpdateProjectCardPayload']> = {
@@ -37854,11 +37803,9 @@ export type WorkflowResolvers<ContextType = any, ParentType extends ResolversPar
     databaseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
     id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
     name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-    resourcePath?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
     runs?: Resolver<ResolversTypes['WorkflowRunConnection'], ParentType, ContextType, RequireFields<WorkflowRunsArgs, 'orderBy'>>;
     state?: Resolver<ResolversTypes['WorkflowState'], ParentType, ContextType>;
     updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-    url?: Resolver<ResolversTypes['URI'], ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 export type WorkflowRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['WorkflowRun'] = ResolversParentTypes['WorkflowRun']> = {
@@ -39080,8 +39027,7 @@ export type GetDiscussionDataQueryVariables = Exact<{
     owner: Scalars['String'];
     name: Scalars['String'];
     categoryID: Scalars['ID'];
-    discussionsCount?: InputMaybe<Scalars['Int']>;
-    commentsCount?: InputMaybe<Scalars['Int']>;
+    count: Scalars['Int'];
 }>;
 export type GetDiscussionDataQuery = {
     __typename?: 'Query';
