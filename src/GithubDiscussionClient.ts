@@ -2,7 +2,7 @@ import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from "@a
 import * as core from '@actions/core';
 import fetch from 'cross-fetch';
 import { DiscussionConnection } from "@octokit/graphql-schema";
-import { GetDiscussionCountQuery, GetDiscussionCountQueryVariables, GetDiscussionCount, GetDiscussionDataQuery, GetDiscussionDataQueryVariables, GetDiscussionData, GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables, GetAnswerableDiscussionId, GetLabelIdQuery, GetLabelId, CloseDiscussionAsResolvedMutation, CloseDiscussionAsResolved, CloseDiscussionAsOutdatedMutation, CloseDiscussionAsOutdated, AddDiscussionCommentMutation, AddDiscussionComment, MarkDiscussionCommentAsAnswerMutation, MarkDiscussionCommentAsAnswer, AddLabelToDiscussionMutation, AddLabelToDiscussion, UpdateDiscussionCommentMutation, UpdateDiscussionComment, ReactionContent, GetDiscussionCommentCountQuery, GetDiscussionCommentCount, GetCommentReactionCountQuery, GetCommentReactionCount, GetCommentReactionDataQuery, GetCommentReactionData, DiscussionCommentConnection, GetCommentMetaDataQuery, GetCommentMetaDataQueryVariables, GetCommentMetaData, DiscussionComment, TeamDiscussionCommentConnection, Discussion } from "./generated/graphql";
+import { GetDiscussionCountQuery, GetDiscussionCountQueryVariables, GetDiscussionCount, GetDiscussionDataQuery, GetDiscussionDataQueryVariables, GetDiscussionData, GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables, GetAnswerableDiscussionId, GetLabelIdQuery, GetLabelId, CloseDiscussionAsResolvedMutation, CloseDiscussionAsResolved, CloseDiscussionAsOutdatedMutation, CloseDiscussionAsOutdated, AddDiscussionCommentMutation, AddDiscussionComment, MarkDiscussionCommentAsAnswerMutation, MarkDiscussionCommentAsAnswer, AddLabelToDiscussionMutation, AddLabelToDiscussion, UpdateDiscussionCommentMutation, UpdateDiscussionComment, ReactionContent, GetDiscussionCommentCountQuery, GetDiscussionCommentCount, GetCommentReactionCountQuery, GetCommentReactionCount, GetCommentReactionDataQuery, GetCommentReactionData, DiscussionCommentConnection, GetCommentMetaDataQuery, GetCommentMetaDataQueryVariables, GetCommentMetaData, DiscussionComment, TeamDiscussionCommentConnection, Discussion, GetLabelIdQueryVariables, CloseDiscussionAsResolvedMutationVariables, CloseDiscussionAsOutdatedMutationVariables, AddDiscussionCommentMutationVariables, MarkDiscussionCommentAsAnswerMutationVariables, AddLabelToDiscussionMutationVariables, UpdateDiscussionCommentMutationVariables, GetDiscussionCommentCountQueryVariables, GetCommentReactionCountQueryVariables, GetCommentReactionDataQueryVariables } from "./generated/graphql";
 
 export class GithubDiscussionClient {
   private _githubClient: ApolloClient<NormalizedCacheObject>;
@@ -43,7 +43,7 @@ export class GithubDiscussionClient {
   async initializeAttentionLabelId() {
     if (!this.attentionLabelId) {
       const attentionLabel = core.getInput('attention-label', { required: false }) || 'attention';
-      const result = await this.githubClient.query<GetLabelIdQuery>({
+      const result = await this.githubClient.query<GetLabelIdQuery, GetLabelIdQueryVariables>({
         query: GetLabelId,
         variables: {
           owner: this.owner,
@@ -64,7 +64,7 @@ export class GithubDiscussionClient {
   }
 
   async getTotalDiscussionCount(categoryID: string) {
-    const resultCountObject = await this.githubClient.query<GetDiscussionCountQuery>({
+    const resultCountObject = await this.githubClient.query<GetDiscussionCountQuery, GetDiscussionCountQueryVariables>({
       query: GetDiscussionCount,
       variables: {
         owner: this.owner,
@@ -82,15 +82,15 @@ export class GithubDiscussionClient {
 
   async getDiscussionsMetaData(categoryID: string): Promise<DiscussionConnection> {
     const discussionsCount = await this.getTotalDiscussionCount(categoryID);
-    const discussionIdList: DiscussionConnection[] = [];
+    console.log("Total discussion count : " + discussionsCount);
 
-    const result = await this.githubClient.query<GetDiscussionDataQuery>({
+    const result = await this.githubClient.query<GetDiscussionDataQuery, GetDiscussionDataQueryVariables>({
       query: GetDiscussionData,
       variables: {
         owner: this.owner,
         name: this.repo,
         categoryID: categoryID,
-        count: discussionsCount,
+        count: discussionsCount!,
       },
     })
 
@@ -101,7 +101,7 @@ export class GithubDiscussionClient {
 
   async getAnswerableDiscussionCategoryIDs(): Promise<any> {
     const answerableCategoryIDs: string[] = [];
-    const result = await this.githubClient.query<GetAnswerableDiscussionIdQuery>({
+    const result = await this.githubClient.query<GetAnswerableDiscussionIdQuery, GetAnswerableDiscussionIdQueryVariables>({
       query: GetAnswerableDiscussionId,
       variables: {
         owner: this.owner,
@@ -129,7 +129,7 @@ export class GithubDiscussionClient {
 
   async closeDiscussionAsResolved(discussionId: string) {
     core.info("Closing discussion as resolved");
-    const result = await this.githubClient.mutate<CloseDiscussionAsResolvedMutation>({
+    const result = await this.githubClient.mutate<CloseDiscussionAsResolvedMutation, CloseDiscussionAsResolvedMutationVariables>({
       mutation: CloseDiscussionAsResolved,
       variables: {
         discussionId
@@ -144,7 +144,7 @@ export class GithubDiscussionClient {
   }
 
   async closeDiscussionAsOutdated(discussionId: string) {
-    const result = await this.githubClient.mutate<CloseDiscussionAsOutdatedMutation>({
+    const result = await this.githubClient.mutate<CloseDiscussionAsOutdatedMutation, CloseDiscussionAsOutdatedMutationVariables>({
       mutation: CloseDiscussionAsOutdated,
       variables: {
         discussionId
@@ -163,7 +163,7 @@ export class GithubDiscussionClient {
       throw new Error(`Couldn't create comment as discussionId is null!`);
     }
 
-    const result = await this.githubClient.mutate<AddDiscussionCommentMutation>({
+    const result = await this.githubClient.mutate<AddDiscussionCommentMutation, AddDiscussionCommentMutationVariables>({
       mutation: AddDiscussionComment,
       variables: {
         discussionId,
@@ -177,7 +177,7 @@ export class GithubDiscussionClient {
   }
 
   async markDiscussionCommentAsAnswer(commentId: string) {
-    const result = await this.githubClient.mutate<MarkDiscussionCommentAsAnswerMutation>({
+    const result = await this.githubClient.mutate<MarkDiscussionCommentAsAnswerMutation, MarkDiscussionCommentAsAnswerMutationVariables>({
       mutation: MarkDiscussionCommentAsAnswer,
       variables: {
         commentId
@@ -196,7 +196,7 @@ export class GithubDiscussionClient {
       throw new Error("Invalid discussion id, can not proceed!");
     }
 
-    const result = await this.githubClient.mutate<AddLabelToDiscussionMutation>({
+    const result = await this.githubClient.mutate<AddLabelToDiscussionMutation, AddLabelToDiscussionMutationVariables>({
       mutation: AddLabelToDiscussion,
       variables: {
         labelableId: discussionId,
@@ -212,7 +212,7 @@ export class GithubDiscussionClient {
   }
 
   async updateDiscussionComment(commentId: string, body: string) {
-    const result = await this.githubClient.mutate<UpdateDiscussionCommentMutation>({
+    const result = await this.githubClient.mutate<UpdateDiscussionCommentMutation, UpdateDiscussionCommentMutationVariables>({
       mutation: UpdateDiscussionComment,
       variables: {
         commentId,
@@ -228,7 +228,7 @@ export class GithubDiscussionClient {
   }
 
   async getDiscussionCommentCount(owner: string, name: string, discussionNum: number): Promise<any> {
-    const result = await this.githubClient.query<GetDiscussionCommentCountQuery>({
+    const result = await this.githubClient.query<GetDiscussionCommentCountQuery, GetDiscussionCommentCountQueryVariables>({
       query: GetDiscussionCommentCount,
       variables: {
         owner: this.owner,
@@ -251,12 +251,12 @@ export class GithubDiscussionClient {
       return;
     }
 
-    const result = await this.githubClient.query<GetCommentReactionCountQuery>({
+    const result = await this.githubClient.query<GetCommentReactionCountQuery, GetCommentReactionCountQueryVariables>({
       query: GetCommentReactionCount,
       variables: {
         owner: this.owner,
         name: this.repo,
-        discussionNum: discussionNum,
+        discussionNumber: discussionNum,
         commentCount: commentCount
       },
     });
@@ -274,12 +274,12 @@ export class GithubDiscussionClient {
       return;
     }
 
-    const result = await this.githubClient.query<GetCommentReactionDataQuery>({
+    const result = await this.githubClient.query<GetCommentReactionDataQuery, GetCommentReactionDataQueryVariables>({
       query: GetCommentReactionData,
       variables: {
         owner: this.owner,
         name: this.repo,
-        discussionNum: discussionNum,
+        discussionNumber: discussionNum,
         commentCount: commentCount,
         reactionCount: reactionCount
       },

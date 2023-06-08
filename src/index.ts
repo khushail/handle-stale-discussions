@@ -23,8 +23,10 @@ async function main() {
 export async function processDiscussions(githubClient: GithubDiscussionClient) {
   const discussionCategoryIDList: string[] = await githubClient.getAnswerableDiscussionCategoryIDs();
   console.log("Printing discussion category ID list ::  " + JSON.stringify(discussionCategoryIDList));
+  
   for (const discussionCategoryID of discussionCategoryIDList) {
     const discussions = await githubClient.getDiscussionsMetaData(discussionCategoryID);
+
     discussions.edges?.map(async discussion => {
       var discussionId = discussion?.node?.id ? discussion?.node?.id : "";
       var discussionNum = discussion?.node?.number ? discussion.node.number : 0;
