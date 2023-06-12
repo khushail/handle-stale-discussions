@@ -1,6 +1,20 @@
 name: 'Handle stale discussions'
 description: 'Custom GH action on discussions'
-
 runs:
   using: 'node16'
   main: 'dist/index.js'
+branding:
+  color: orange
+  icon: cloud
+inputs:
+  attention-label:
+    description: 'Label to add to stale discussions'
+    required: false
+    default: 'attention'
+  github-token:
+    description: 'GitHub token'
+    required: false
+  days-until-stale:
+    description: 'Number of days of inactivity before a discussion is considered stale'
+    required: false
+    default: 7

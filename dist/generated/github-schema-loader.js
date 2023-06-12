@@ -1,0 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const graphql_schema_1 = require("@octokit/graphql-schema");
+exports.default = graphql_schema_1.schema.json;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ2l0aHViLXNjaGVtYS1sb2FkZXIuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvZ2VuZXJhdGVkL2dpdGh1Yi1zY2hlbWEtbG9hZGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQUEsNERBQWdEO0FBQ2hELGtCQUFlLHVCQUFNLENBQUMsSUFBSSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgc2NoZW1hIH0gZnJvbSAnQG9jdG9raXQvZ3JhcGhxbC1zY2hlbWEnXG5leHBvcnQgZGVmYXVsdCBzY2hlbWEuanNvbjsiXX0=

@@ -1,0 +1,19 @@
+query GetCommentReactionData($owner: String!, $name: String!, $discussionNumber: Int!, $commentCount: Int!, $reactionCount: Int!){
+  repository(owner: $owner, name: $name) {
+    discussion(number: $discussionNumber) {
+      comments(last:$commentCount){
+        edges {
+          node {
+            id
+            reactions(last: $reactionCount) {
+                  nodes
+                  {
+                    content
+                  }
+                } 
+          }
+        }
+      }
+    }
+  }
+}

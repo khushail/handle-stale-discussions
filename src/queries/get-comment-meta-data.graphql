@@ -1,0 +1,30 @@
+query GetCommentMetaData($owner: String!, $name: String!, $discussionNumber: Int!, $commentCount: Int!){
+  repository(owner: $owner, name: $name) {
+    discussion(number: $discussionNumber) {
+      id
+      comments(last:$commentCount){
+        edges {
+          node {
+            id
+            bodyText
+            updatedAt
+            replies(last: 1) {
+              edges {
+                node {
+                  id
+                  bodyText
+                }
+              }
+            }
+            reactions(last:10) {
+                  nodes
+                  {
+                    content
+                  }
+                }     
+          }
+        }
+      }
+    }
+  }
+}

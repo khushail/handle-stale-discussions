@@ -41420,6 +41420,90 @@ export const GetAnswerableDiscussionId = gql`
   }
 }
     `;
+export const GetCommentMetaData = gql`
+    query GetCommentMetaData($owner: String!, $name: String!, $discussionNumber: Int!, $commentCount: Int!) {
+  repository(owner: $owner, name: $name) {
+    discussion(number: $discussionNumber) {
+      id
+      comments(last: $commentCount) {
+        edges {
+          node {
+            id
+            bodyText
+            updatedAt
+            replies(last: 1) {
+              edges {
+                node {
+                  id
+                  bodyText
+                }
+              }
+            }
+            reactions(last: 10) {
+              nodes {
+                content
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetCommentReactionCount = gql`
+    query GetCommentReactionCount($owner: String!, $name: String!, $discussionNumber: Int!, $commentCount: Int!) {
+  repository(owner: $owner, name: $name) {
+    discussion(number: $discussionNumber) {
+      comments(last: $commentCount) {
+        edges {
+          node {
+            id
+            bodyText
+            reactions {
+              totalCount
+            }
+            replies {
+              totalCount
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetCommentReactionData = gql`
+    query GetCommentReactionData($owner: String!, $name: String!, $discussionNumber: Int!, $commentCount: Int!, $reactionCount: Int!) {
+  repository(owner: $owner, name: $name) {
+    discussion(number: $discussionNumber) {
+      comments(last: $commentCount) {
+        edges {
+          node {
+            id
+            reactions(last: $reactionCount) {
+              nodes {
+                content
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetDiscussionCommentCount = gql`
+    query getDiscussionCommentCount($owner: String!, $name: String!, $num: Int!) {
+  repository(owner: $owner, name: $name) {
+    discussion(number: $num) {
+      comments {
+        totalCount
+      }
+    }
+  }
+}
+    `;
 export const GetDiscussionCount = gql`
     query GetDiscussionCount($owner: String!, $name: String!, $categoryId: ID!) {
   repository(owner: $owner, name: $name) {
@@ -41430,7 +41514,7 @@ export const GetDiscussionCount = gql`
 }
     `;
 export const GetDiscussionData = gql`
-    query GetDiscussionData($owner: String!, $name: String!, $categoryID: ID!, $count: Int) {
+    query GetDiscussionData($owner: String!, $name: String!, $categoryID: ID!, $count: Int!) {
   repository(owner: $owner, name: $name) {
     discussions(categoryId: $categoryID, last: $count) {
       edges {
@@ -41438,26 +41522,13 @@ export const GetDiscussionData = gql`
           locked
           id
           bodyText
+          number
           author {
             login
           }
           answer {
             id
             bodyText
-          }
-          comments(last: 1) {
-            edges {
-              node {
-                id
-                bodyText
-                updatedAt
-                reactions(last: 10) {
-                  nodes {
-                    content
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -41555,6 +41626,46 @@ export type GetAnswerableDiscussionIdQueryVariables = Exact<{
 
 export type GetAnswerableDiscussionIdQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussionCategories: { __typename?: 'DiscussionCategoryConnection', edges?: Array<{ __typename?: 'DiscussionCategoryEdge', node?: { __typename?: 'DiscussionCategory', isAnswerable: boolean, id: string } | null } | null> | null } } | null };
 
+export type GetCommentMetaDataQueryVariables = Exact<{
+  owner: Scalars['String'];
+  name: Scalars['String'];
+  discussionNumber: Scalars['Int'];
+  commentCount: Scalars['Int'];
+}>;
+
+
+export type GetCommentMetaDataQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussion?: { __typename?: 'Discussion', id: string, comments: { __typename?: 'DiscussionCommentConnection', edges?: Array<{ __typename?: 'DiscussionCommentEdge', node?: { __typename?: 'DiscussionComment', id: string, bodyText: string, updatedAt: any, replies: { __typename?: 'DiscussionCommentConnection', edges?: Array<{ __typename?: 'DiscussionCommentEdge', node?: { __typename?: 'DiscussionComment', id: string, bodyText: string } | null } | null> | null }, reactions: { __typename?: 'ReactionConnection', nodes?: Array<{ __typename?: 'Reaction', content: ReactionContent } | null> | null } } | null } | null> | null } } | null } | null };
+
+export type GetCommentReactionCountQueryVariables = Exact<{
+  owner: Scalars['String'];
+  name: Scalars['String'];
+  discussionNumber: Scalars['Int'];
+  commentCount: Scalars['Int'];
+}>;
+
+
+export type GetCommentReactionCountQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussion?: { __typename?: 'Discussion', comments: { __typename?: 'DiscussionCommentConnection', edges?: Array<{ __typename?: 'DiscussionCommentEdge', node?: { __typename?: 'DiscussionComment', id: string, bodyText: string, reactions: { __typename?: 'ReactionConnection', totalCount: number }, replies: { __typename?: 'DiscussionCommentConnection', totalCount: number } } | null } | null> | null } } | null } | null };
+
+export type GetCommentReactionDataQueryVariables = Exact<{
+  owner: Scalars['String'];
+  name: Scalars['String'];
+  discussionNumber: Scalars['Int'];
+  commentCount: Scalars['Int'];
+  reactionCount: Scalars['Int'];
+}>;
+
+
+export type GetCommentReactionDataQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussion?: { __typename?: 'Discussion', comments: { __typename?: 'DiscussionCommentConnection', edges?: Array<{ __typename?: 'DiscussionCommentEdge', node?: { __typename?: 'DiscussionComment', id: string, reactions: { __typename?: 'ReactionConnection', nodes?: Array<{ __typename?: 'Reaction', content: ReactionContent } | null> | null } } | null } | null> | null } } | null } | null };
+
+export type GetDiscussionCommentCountQueryVariables = Exact<{
+  owner: Scalars['String'];
+  name: Scalars['String'];
+  num: Scalars['Int'];
+}>;
+
+
+export type GetDiscussionCommentCountQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussion?: { __typename?: 'Discussion', comments: { __typename?: 'DiscussionCommentConnection', totalCount: number } } | null } | null };
+
 export type GetDiscussionCountQueryVariables = Exact<{
   owner: Scalars['String'];
   name: Scalars['String'];
@@ -41568,11 +41679,11 @@ export type GetDiscussionDataQueryVariables = Exact<{
   owner: Scalars['String'];
   name: Scalars['String'];
   categoryID: Scalars['ID'];
-  count?: InputMaybe<Scalars['Int']>;
+  count: Scalars['Int'];
 }>;
 
 
-export type GetDiscussionDataQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussions: { __typename?: 'DiscussionConnection', edges?: Array<{ __typename?: 'DiscussionEdge', node?: { __typename?: 'Discussion', locked: boolean, id: string, bodyText: string, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null, answer?: { __typename?: 'DiscussionComment', id: string, bodyText: string } | null, comments: { __typename?: 'DiscussionCommentConnection', edges?: Array<{ __typename?: 'DiscussionCommentEdge', node?: { __typename?: 'DiscussionComment', id: string, bodyText: string, updatedAt: any, reactions: { __typename?: 'ReactionConnection', nodes?: Array<{ __typename?: 'Reaction', content: ReactionContent } | null> | null } } | null } | null> | null } } | null } | null> | null } } | null };
+export type GetDiscussionDataQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussions: { __typename?: 'DiscussionConnection', edges?: Array<{ __typename?: 'DiscussionEdge', node?: { __typename?: 'Discussion', locked: boolean, id: string, bodyText: string, number: number, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null, answer?: { __typename?: 'DiscussionComment', id: string, bodyText: string } | null } | null } | null> | null } } | null };
 
 export type IsDiscussionLockedQueryVariables = Exact<{
   owner: Scalars['String'];
