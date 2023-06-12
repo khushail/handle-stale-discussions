@@ -11,15 +11,15 @@
     },
     "repository": {
       "type": "git",
-      "url": "git+https://github.com/aws-github-ops/handle-stale-discussions.git"
+      "url": "git+https://github.com/khushail/testingDiscussions_v2.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "bugs": {
-      "url": "https://github.com/aws-github-ops/handle-stale-discussions/issues"
+      "url": "https://github.com/khushail/testingDiscussions_v2/issues"
     },
-    "homepage": "https://github.com/aws-github-ops/handle-stale-discussions#readme",
+    "homepage": "https://github.com/khushail/testingDiscussions_v2#readme",
     "dependencies": {
       "@actions/core": "1.10.0",
       "@actions/github": "5.1.1",
