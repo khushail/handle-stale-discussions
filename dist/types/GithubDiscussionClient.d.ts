@@ -13,7 +13,7 @@ export declare class GithubDiscussionClient {
     getTotalDiscussionCount(categoryID: string): Promise<number>;
     getDiscussionCommentCount(discussionNum: number): Promise<number>;
     getCommentsMetaData(discussionNum: number, commentCount: number): Promise<DiscussionCommentConnection>;
-    getDiscussionsMetaData(categoryID: string): Promise<DiscussionConnection>;
+    getDiscussionsMetaData(categoryID: string, pageSize: number, afterCursor: string): Promise<DiscussionConnection>;
     getAnswerableDiscussionCategoryIDs(): Promise<any>;
     closeDiscussionAsResolved(discussionId: string): Promise<void>;
     closeDiscussionAsOutdated(discussionId: string): Promise<void>;

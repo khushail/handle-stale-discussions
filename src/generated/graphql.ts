@@ -41486,9 +41486,18 @@ export const GetDiscussionCount = gql`
 }
     `;
 export const GetDiscussionData = gql`
-    query GetDiscussionData($owner: String!, $name: String!, $categoryID: ID!, $count: Int!) {
+    query GetDiscussionData($owner: String!, $name: String!, $categoryID: ID!, $after: String, $pageSize: Int!) {
   repository(owner: $owner, name: $name) {
-    discussions(categoryId: $categoryID, last: $count) {
+    discussions(
+      categoryId: $categoryID
+      after: $after
+      first: $pageSize
+      orderBy: {field: UPDATED_AT, direction: DESC}
+    ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       edges {
         node {
           locked
@@ -41633,11 +41642,12 @@ export type GetDiscussionDataQueryVariables = Exact<{
   owner: Scalars['String'];
   name: Scalars['String'];
   categoryID: Scalars['ID'];
-  count: Scalars['Int'];
+  after?: InputMaybe<Scalars['String']>;
+  pageSize: Scalars['Int'];
 }>;
 
 
-export type GetDiscussionDataQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussions: { __typename?: 'DiscussionConnection', edges?: Array<{ __typename?: 'DiscussionEdge', node?: { __typename?: 'Discussion', locked: boolean, id: string, bodyText: string, number: number, closed: boolean, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null, answer?: { __typename?: 'DiscussionComment', id: string, bodyText: string } | null } | null } | null> | null } } | null };
+export type GetDiscussionDataQuery = { __typename?: 'Query', repository?: { __typename?: 'Repository', discussions: { __typename?: 'DiscussionConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null }, edges?: Array<{ __typename?: 'DiscussionEdge', node?: { __typename?: 'Discussion', locked: boolean, id: string, bodyText: string, number: number, closed: boolean, author?: { __typename?: 'Bot', login: string } | { __typename?: 'EnterpriseUserAccount', login: string } | { __typename?: 'Mannequin', login: string } | { __typename?: 'Organization', login: string } | { __typename?: 'User', login: string } | null, answer?: { __typename?: 'DiscussionComment', id: string, bodyText: string } | null } | null } | null> | null } } | null };
 
 export type IsDiscussionLockedQueryVariables = Exact<{
   owner: Scalars['String'];

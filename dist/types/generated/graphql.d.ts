@@ -38983,7 +38983,8 @@ export type GetDiscussionDataQueryVariables = Exact<{
     owner: Scalars['String'];
     name: Scalars['String'];
     categoryID: Scalars['ID'];
-    count: Scalars['Int'];
+    after?: InputMaybe<Scalars['String']>;
+    pageSize: Scalars['Int'];
 }>;
 export type GetDiscussionDataQuery = {
     __typename?: 'Query';
@@ -38991,6 +38992,11 @@ export type GetDiscussionDataQuery = {
         __typename?: 'Repository';
         discussions: {
             __typename?: 'DiscussionConnection';
+            pageInfo: {
+                __typename?: 'PageInfo';
+                hasNextPage: boolean;
+                endCursor?: string | null;
+            };
             edges?: Array<{
                 __typename?: 'DiscussionEdge';
                 node?: {
