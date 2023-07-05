@@ -45,7 +45,7 @@ export async function processDiscussions(githubClient: GithubDiscussionClient) {
       for (const discussion of discussions.edges!) {
         var discussionId = discussion?.node?.id ? discussion?.node?.id : "";
         var discussionNum = discussion?.node?.number ? discussion.node.number : 0;
-        core.debug(`Processing discussionId: ${discussionId} with number: ${discussionNum} and bodyText: ${discussion?.node?.bodyText}`);
+        core.debug(`Processing discussionId: ${discussionId} with number: ${discussionNum} and bodyText: ${discussion?.node?.body}`);
         if (discussionId === "" || discussionNum === 0) {
           core.warning(`Can not proceed checking discussion, discussionId is null!`);
           continue;
@@ -81,8 +81,8 @@ export async function processComments(discussion: octokit.DiscussionEdge, github
   if (commentCount !== 0) {
     for (const comment of comments.edges!) {
       const commentId = comment?.node?.id;
-      core.debug(`Processing comment ${commentId} with bodytext: ${comment?.node?.bodyText}`);
-      if (!comment?.node?.bodyText || !comment.node.id) {
+      core.debug(`Processing comment ${commentId} with bodytext: ${comment?.node?.body}`);
+      if (!comment?.node?.body || !comment.node.id) {
         core.warning(`Comment body or id is null in discussion ${discussionId}, skipping comment!`);
         continue;
       }
@@ -138,7 +138,7 @@ function closeDiscussionForStaleness(discussionId: string, githubClient: GithubD
 }
 
 function closeAndMarkAsAnswered(comment: DiscussionCommentEdge, discussionId: string, githubClient: GithubDiscussionClient) {
-  const bodyText = comment?.node?.bodyText!;
+  const bodyText = comment?.node?.body!;
   const commentId = comment?.node?.id!;
   const updatedAnswerText = bodyText.replace(PROPOSED_ANSWER_KEYWORD, 'Answer: ');
   githubClient.updateDiscussionComment(commentId, updatedAnswerText);

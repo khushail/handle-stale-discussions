@@ -34,7 +34,7 @@ export function hasReaction(comment: DiscussionCommentEdge): boolean {
 }
 
 export function containsKeyword(comment: DiscussionCommentEdge, text: string): boolean {
-  return comment?.node?.bodyText?.indexOf(text)! >= 0;
+  return comment?.node?.body?.indexOf(text)! >= 0;
 }
 
 export function exceedsDaysUntilStale(comment: DiscussionCommentEdge, staleTimeDays: number): boolean {
@@ -43,12 +43,12 @@ export function exceedsDaysUntilStale(comment: DiscussionCommentEdge, staleTimeD
 
 export function hasReplies(comment: DiscussionCommentEdge): boolean {
   return comment.node?.replies.edges?.some(reply => {
-    return (reply?.node?.bodyText.length !== 0);
+    return (reply?.node?.body.length !== 0);
   })!;
 }
 
 export function hasNonInstructionsReply(comments: DiscussionCommentEdge, INSTRUCTIONS_TEXT: string): boolean {
   return comments.node?.replies.edges?.some(comment => {
-    return comment?.node?.bodyText?.indexOf(INSTRUCTIONS_TEXT)! < 0;
+    return comment?.node?.body?.indexOf(INSTRUCTIONS_TEXT)! < 0;
   })!;
 }
