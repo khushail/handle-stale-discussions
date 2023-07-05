@@ -14,8 +14,8 @@ const CLOSE_FOR_STALENESS_RESPONSE_TEXT = core.getInput('stale-response-text', {
   || 'Closing the discussion for staleness. Please open a new discussion if you have further concerns.';
 const INSTRUCTIONS_TEXT = core.getInput('instructions-response-text', { required: false })
   || 'Hello! A team member has marked the above comment as the likely answer to this discussion thread. '
-  + '\n\n ** If you agree, please upvote that comment, or click on Mark as answer. I will automatically mark the comment as the answer next time I check. '
-  + '\n\n ** If this answer does not help you, please downvote the answer instead and let us know why it was not helpful. '
+  + '\n\n * If you agree, please upvote that comment, or click on Mark as answer. I will automatically mark the comment as the answer next time I check. '
+  + '\n\n * If this answer does not help you, please downvote the answer instead and let us know why it was not helpful. '
   + 'I will add a label to this discussion to gain attention from the team.';
 
 async function main() {
