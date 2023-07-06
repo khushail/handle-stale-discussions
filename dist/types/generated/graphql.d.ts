@@ -38930,6 +38930,22 @@ export type GetCommentMetaDataQuery = {
                                         __typename?: 'DiscussionCommentConnection';
                                         totalCount: number;
                                     };
+                                    author?: {
+                                        __typename?: 'Bot';
+                                        login: string;
+                                    } | {
+                                        __typename?: 'EnterpriseUserAccount';
+                                        login: string;
+                                    } | {
+                                        __typename?: 'Mannequin';
+                                        login: string;
+                                    } | {
+                                        __typename?: 'Organization';
+                                        login: string;
+                                    } | {
+                                        __typename?: 'User';
+                                        login: string;
+                                    } | null;
                                 } | null;
                             } | null> | null;
                         };

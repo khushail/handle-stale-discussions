@@ -2,9 +2,11 @@ import * as octokit from '@octokit/graphql-schema';
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { GithubDiscussionClient } from "./GithubDiscussionClient";
-import { containsKeyword, containsNegativeReaction, containsPositiveReaction, hasNonInstructionsReply, exceedsDaysUntilStale, hasReplies } from './util';
+import { containsKeyword, containsNegativeReaction, containsPositiveReaction, exceedsDaysUntilStale, hasReplies, hasNonBotReply } from './util';
 import { DiscussionCommentEdge } from './generated/graphql';
 
+const PAGE_SIZE = parseFloat(core.getInput('days-until-stale', { required: false })) || 50;
+const GITHUB_BOT = core.getInput('github-bot', { required: false}) || 'github-actions';
 const DAYS_UNTIL_STALE = parseFloat(core.getInput('days-until-stale', { required: false })) || 7;
 const PROPOSED_ANSWER_KEYWORD = core.getInput('proposed-answer-keyword', { required: false }) || '@github-actions proposed-answer';
 const CLOSE_LOCKED_DISCUSSIONS = core.getBooleanInput('close-locked-discussions', { required: false });
@@ -33,12 +35,11 @@ export async function processDiscussions(githubClient: GithubDiscussionClient) {
   const discussionCategoryIDList: string[] = await githubClient.getAnswerableDiscussionCategoryIDs();
 
   for (const discussionCategoryID of discussionCategoryIDList) {
-    const pageSize = 50;
     let hasNextPage = true;
     let afterCursor: string | null = null;
 
     while (hasNextPage) {
-      const discussions = await githubClient.getDiscussionsMetaData(discussionCategoryID, pageSize, afterCursor!);
+      const discussions = await githubClient.getDiscussionsMetaData(discussionCategoryID, PAGE_SIZE, afterCursor!);
       hasNextPage = discussions.pageInfo.hasNextPage;
       afterCursor = discussions.pageInfo.endCursor!;
     
@@ -103,7 +104,7 @@ export async function processComments(discussion: octokit.DiscussionEdge, github
           core.info(`Since this has no reply, adding instructions reply to comment ${commentId} in discussion ${discussionId}`);
           githubClient.addInstructionTextReply(INSTRUCTIONS_TEXT, discussionId, commentId!);
         }
-        else if (hasNonInstructionsReply(comment, INSTRUCTIONS_TEXT)) {
+        else if (hasNonBotReply(comment, GITHUB_BOT)) {
           core.info(`Discussion ${discussionId} has a reply, but not an instructions reply. Adding attention label`);
           githubClient.addAttentionLabelToDiscussion(discussionId);
         }

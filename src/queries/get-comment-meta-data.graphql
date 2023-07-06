@@ -16,6 +16,9 @@ query GetCommentMetaData($owner: String!, $name: String!, $discussionNumber: Int
                   replies{
                     totalCount
                   }
+                  author{
+                    login
+                  }
                 }
               }
             }
