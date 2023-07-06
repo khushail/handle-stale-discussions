@@ -5,7 +5,7 @@ import { GithubDiscussionClient } from "./GithubDiscussionClient";
 import { containsKeyword, containsNegativeReaction, containsPositiveReaction, exceedsDaysUntilStale, hasReplies, hasNonBotReply } from './util';
 import { DiscussionCommentEdge } from './generated/graphql';
 
-const PAGE_SIZE = parseFloat(core.getInput('days-until-stale', { required: false })) || 50;
+const PAGE_SIZE = parseInt(core.getInput('days-until-stale', { required: false })) || 50;
 const GITHUB_BOT = core.getInput('github-bot', { required: false}) || 'github-actions';
 const DAYS_UNTIL_STALE = parseFloat(core.getInput('days-until-stale', { required: false })) || 7;
 const PROPOSED_ANSWER_KEYWORD = core.getInput('proposed-answer-keyword', { required: false }) || '@github-actions proposed-answer';
