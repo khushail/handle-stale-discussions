@@ -44,7 +44,7 @@ inputs:
     description: 'Github action bot login name'
     required: false
     default: 'github-actions'
-  page_size:
+  page-size:
     description: 'Page size count for discussions to be loaded per page'
     required: false
     default: 50

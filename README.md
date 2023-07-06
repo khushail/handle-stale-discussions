@@ -1,8 +1,12 @@
 # "Handle Stale Discussions" Action for Github Action
 
-This Github action checks the **answerable discussions** in your repository for an answer with the keyword `@github-actions proposed-answer`. If a positive reaction (thumbsup, laughing, rocket, heart, hooray) is received on the proposed answer, the discussion is marked as answered and closed as resolved. Otherwise if a negative reaction (thumbsdown, confused) is added or a reply is received, a label (`attention` by default) is added so the discussion can gain attention from the repository maintainers. If there is no reaction or response to a proposed answer after 7 days by default, the discussion is closed as outdated.
+This Github action checks the **answerable discussions** in your repository for an answer with the keyword `@github-actions proposed-answer`. 
+* If a positive reaction (thumbsup, laughing, rocket, heart, hooray) is received on the proposed answer, the discussion is marked as answered and closed as resolved. 
+* Otherwise if a negative reaction (thumbsdown, confused) is added or a reply is received, a label (`attention` by default) is added so the discussion can gain attention from the repository maintainers. 
 
-If this workflow is configured to run when a discussion comment is created, then it will check if the newly created comment is a proposed answer. If it is, then an instructions response will be posted right away. This way, people can immediately know how to interact with the discussions bot. Please note, this is the only action that will occur on a new comment event trigger. Any other event which invokes this action will process all answerable discussions and comments in the repository.
+If there is no reaction or response to a proposed answer after 7 days by default, the discussion is closed as outdated.
+
+If this workflow is configured to run when a discussion comment is created, then it will check if the newly created comment is a proposed answer. If it is, then an instructions response will be posted right away. This way, people can immediately know how to interact with the discussions bot. Please note, this is the only action that will occur on a <b> new comment event trigger </b>. Any other event which invokes this action will process all answerable discussions and comments in the repository.
 
 In addition to handling proposed answers, this action will automatically close any discussions that have a marked answer as resolved, and it will automatically close any locked discussions as outdated. Both of these functionalities can be disabled.
 
@@ -41,7 +45,7 @@ jobs:
       - uses: aws-github-ops/handle-stale-discussions@v1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          attention-label: needs-attention
+          attention-label: attention
 ```
 
 ## Inputs
@@ -86,7 +90,9 @@ Comment to post as a reply when a proposed answer is given
 
 Default: 
 
-> Hello! A team member has marked the above comment as the likely answer to this discussion thread. If you agree, please upvote that comment, or click on `Mark as answer`. I will automatically mark the comment as the answer next time I check. If this answer doesn't help you, please downvote the answer instead and let us know why it wasn't helpful. I will add a label to this discussion to gain attention from the team.
+> Hello! A team member has marked the above comment as the likely answer to this discussion thread. 
+* If you agree, please upvote that comment, or click on `Mark as answer`. I will automatically mark the comment as the answer next time I check. 
+* If this answer doesn't help you, please downvote the answer instead and let us know why it wasn't helpful. I will add a label to this discussion to gain attention from the team.
 
 ### stale-response-text
 
@@ -101,6 +107,18 @@ Default:
 Close stale discussions as answered
 
 Default: `false`. Stale discussions are closed as outdated.
+
+### github-bot
+
+Github action bot login name
+
+Default: 'github-actions'. This login name will be used to check if the reply is posted by Github-actions bot.
+
+### page-size
+
+Page size count for the discussions nodes being loaded per page
+
+Default: 50
 
 ## Contributing 
 We welcome community contributions and pull requests. See [CONTRIBUTING.md](https://github.com/aws-github-ops/handle-stale-discussions/blob/main/CONTRIBUTING.md) for information on how to submit code.
