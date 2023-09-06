@@ -26,15 +26,20 @@ const INSTRUCTIONS_TEXT = core.getInput('instructions-response-text', { required
 async function main() {
   const githubClient = new GithubDiscussionClient();
   await githubClient.initializeAttentionLabelId();
-  if (triggeredByNewComment()) {
-    if (github.context.payload.comment?.body.indexOf(PROPOSED_ANSWER_KEYWORD) >= 0) {
-      core.info('Comment created with proposed answer keyword. Adding instuctions reply to comment');
-      githubClient.addInstructionTextReply(INSTRUCTIONS_TEXT, github.context.payload.discussion!.node_id, github.context.payload.comment!.node_id);
+  try{
+    if (triggeredByNewComment()) {
+      if (github.context.payload.comment?.body.indexOf(PROPOSED_ANSWER_KEYWORD) >= 0) {
+        core.info('Comment created with proposed answer keyword. Adding instuctions reply to comment with id: '+ github.context.payload.discussion!.node_id);
+        githubClient.addInstructionTextReply(INSTRUCTIONS_TEXT, github.context.payload.discussion!.node_id, github.context.payload.comment!.node_id);
+      } else {
+        core.info('Comment created without proposed answer keyword. No action needed');
+      }
     } else {
-      core.info('Comment created without proposed answer keyword. No action needed');
+      await processDiscussions(githubClient);
     }
-  } else {
-    await processDiscussions(githubClient);
+  }
+  catch(e){
+    core.info((e as Error).message);
   }
 }
 
@@ -53,36 +58,36 @@ export async function processDiscussions(githubClient: GithubDiscussionClient) {
       const discussions = await githubClient.getDiscussionsMetaData(discussionCategoryID, PAGE_SIZE, afterCursor!);
       hasNextPage = discussions.pageInfo.hasNextPage;
       afterCursor = discussions.pageInfo.endCursor!;
-    
-      for (const discussion of discussions.edges!) {
-        var discussionId = discussion?.node?.id ? discussion?.node?.id : "";
-        var discussionNum = discussion?.node?.number ? discussion.node.number : 0;
-        core.debug(`Processing discussionId: ${discussionId} with number: ${discussionNum} and bodyText: ${discussion?.node?.bodyText}`);
-        if (discussionId === "" || discussionNum === 0) {
-          core.warning(`Can not proceed checking discussion, discussionId is null!`);
-          continue;
-        }
-        else if (discussion?.node?.closed) {
-          core.debug(`Discussion ${discussionId} is closed, so no action needed.`);
-          continue;
-        }
-        else if (discussion?.node?.locked && CLOSE_LOCKED_DISCUSSIONS) {
-          core.info(`Discussion ${discussionId} is locked, closing it as resolved`);
-          githubClient.closeDiscussionAsResolved(discussionId);
-          continue;
-        }
-        else if (discussion?.node?.answer != null && CLOSE_ANSWERED_DISCUSSIONS) {
-          core.info(`Discussion ${discussionId} is already answered, so closing it as resolved.`);
-          githubClient.closeDiscussionAsResolved(discussionId);
-          continue;
-        }
-        else {
-          await processComments(discussion!, githubClient);
+
+        for (const discussion of discussions.edges!) {
+          var discussionId = discussion?.node?.id ? discussion?.node?.id : "";
+          var discussionNum = discussion?.node?.number ? discussion.node.number : 0;
+          core.debug(`Processing discussionId: ${discussionId} with number: ${discussionNum} and bodyText: ${discussion?.node?.bodyText}`);
+          if (discussionId === "" || discussionNum === 0) {
+            core.warning(`Can not proceed checking discussion, discussionId is null!`);
+            continue;
+          }
+          else if (discussion?.node?.closed) {
+            core.info(`Discussion ${discussionId} is closed, so no action needed.`);
+            continue;
+          }
+          else if (discussion?.node?.locked && CLOSE_LOCKED_DISCUSSIONS) {
+            core.info(`Discussion ${discussionId} is locked, closing it as resolved`);
+            githubClient.closeDiscussionAsResolved(discussionId);
+            continue;
+          }
+          else if (discussion?.node?.answer != null && CLOSE_ANSWERED_DISCUSSIONS) {
+            core.info(`Discussion ${discussionId} is already answered, so closing it as resolved.`);
+            githubClient.closeDiscussionAsResolved(discussionId);
+            continue;
+          }
+          else {
+            await processComments(discussion!, githubClient);
+          }
         }
       }
     }
   }
-}
 
 export async function processComments(discussion: octokit.DiscussionEdge, githubClient: GithubDiscussionClient) {
   const discussionId = discussion.node?.id ? discussion.node?.id : "";
