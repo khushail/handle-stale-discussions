@@ -13,13 +13,19 @@ export class GithubDiscussionClient {
   private attentionLabelId: string;
 
   constructor() {
-    const githubToken = core.getInput('github-token', { required: false }) || process.env.GITHUB_TOKEN;
-    if (!githubToken) {
-      throw new Error('You must provide a GitHub token as an input to this action, or as a `GITHUB_TOKEN` env variable. See the README for more info.');
-    }
     this.owner = github.context.repo.owner;
     this.repo = github.context.repo.repo;
-    this.githubToken = githubToken;
+
+    try {
+      const githubToken = core.getInput('github-token', { required: false }) || process.env.GITHUB_TOKEN;
+      if (!githubToken) {
+        throw new Error('You must provide a GitHub token as an input to this action, or as a `GITHUB_TOKEN` env variable. See the README for more info.');
+      }
+      this.githubToken = githubToken;
+    }
+    catch(error) {
+      core.info("Error reported in Provided Github Token"+ error);
+    }
   }
 
   public get githubClient(): ApolloClient<NormalizedCacheObject> {
@@ -49,79 +55,99 @@ export class GithubDiscussionClient {
   }
 
   public async initializeAttentionLabelId() {
-    if (!this.attentionLabelId) {
-      const attentionLabel = core.getInput('attention-label', { required: false }) || 'attention';
-      const result = await this.githubClient.query<GetLabelIdQuery>({
-        query: GetLabelId,
-        variables: {
-          owner: this.owner,
-          name: this.repo,
-          labelName: attentionLabel
+    try{
+      if (!this.attentionLabelId) {
+        const attentionLabel = core.getInput('attention-label', { required: false }) || 'attention';
+        const result = await this.githubClient.query<GetLabelIdQuery>({
+          query: GetLabelId,
+          variables: {
+            owner: this.owner,
+            name: this.repo,
+            labelName: attentionLabel
+          }
+        });
+
+        if (!result.data.repository?.label?.id) {
+          throw new Error(`Couldn't find label ${attentionLabel} in repository. Please create this label and try again.`);
         }
-      });
 
-      if (!result.data.repository?.label?.id) {
-        throw new Error(`Couldn't find label ${attentionLabel} in repository. Please create this label and try again.`);
-      }
-
-      this.attentionLabelId = result.data.repository?.label?.id;
+        this.attentionLabelId = result.data.repository?.label?.id;
+     }
+    }
+    catch(error) {
+      core.info("Error reported in getting the Attention label " +error);
     }
   }
 
   public async getTotalDiscussionCount(categoryID: string): Promise<number> {
-    const resultCountObject = await this.githubClient.query<GetDiscussionCountQuery, GetDiscussionCountQueryVariables>({
-      query: GetDiscussionCount,
-      variables: {
-        owner: this.owner,
-        name: this.repo,
-        categoryId: categoryID
-      },
-    });
+    try {
+      const resultCountObject = await this.githubClient.query<GetDiscussionCountQuery, GetDiscussionCountQueryVariables>({
+        query: GetDiscussionCount,
+        variables: {
+          owner: this.owner,
+          name: this.repo,
+          categoryId: categoryID
+        },
+      });
 
-    if (resultCountObject.error) {
-      core.warning(`Error in reading discussions count for discussions category ${categoryID}: ${resultCountObject.error}`);
+      if (resultCountObject.error) {
+        core.warning(`Error in reading discussions count for discussions category ${categoryID}: ${resultCountObject.error}`);
+      }
+
+      core.debug(`Total discussion count for Category ${categoryID}: ${resultCountObject.data.repository?.discussions.totalCount}`);
+      return resultCountObject.data.repository?.discussions.totalCount!;
+    }
+    catch(error) {
+      core.info("Error reported in Getting total discussion count "+error);
       return 0;
     }
-
-    core.debug(`Total discussion count for Category ${categoryID}: ${resultCountObject.data.repository?.discussions.totalCount}`);
-    return resultCountObject.data.repository?.discussions.totalCount!;
   }
 
   public async getDiscussionCommentCount(discussionNum: number): Promise<number> {
-    const result = await this.githubClient.query<GetDiscussionCommentCountQuery, GetDiscussionCommentCountQueryVariables>({
-      query: GetDiscussionCommentCount,
-      variables: {
-        owner: this.owner,
-        name: this.repo,
-        num: discussionNum
-      },
-    });
+    try {
+      const result = await this.githubClient.query<GetDiscussionCommentCountQuery, GetDiscussionCommentCountQueryVariables>({
+        query: GetDiscussionCommentCount,
+        variables: {
+          owner: this.owner,
+          name: this.repo,
+          num: discussionNum
+        },
+      });
 
-    if (result.error) {
-      core.warning(`Error retrieving comment count for discussion ${discussionNum}: ${result.error}`);
+      if (result.error) {
+        core.warning(`Error retrieving comment count for discussion ${discussionNum}: ${result.error}`);
+      }
+
+      return result.data.repository?.discussion?.comments.totalCount!;
+    }
+    catch(error) {
+      core.info(`Error ${error}reported in getting Discussion comment count for discussion number: ${discussionNum} `);
       return 0;
     }
-
-    return result.data.repository?.discussion?.comments.totalCount!;
   }
 
   public async getCommentsMetaData(discussionNum: number, commentCount: number): Promise<DiscussionCommentConnection> {
-    const result = await this.githubClient.query<GetCommentMetaDataQuery, GetCommentMetaDataQueryVariables>({
-      query: GetCommentMetaData,
-      variables: {
-        owner: this.owner,
-        name: this.repo,
-        discussionNumber: discussionNum,
-        commentCount: commentCount,
-      },
-    })
+    try{
+      const result = await this.githubClient.query<GetCommentMetaDataQuery, GetCommentMetaDataQueryVariables>({
+        query: GetCommentMetaData,
+        variables: {
+          owner: this.owner,
+          name: this.repo,
+          discussionNumber: discussionNum,
+          commentCount: commentCount,
+        },
+      })
 
-    if (result.error) {
-      core.warning(`Error retrieving comment metadata for discussion ${discussionNum}: ${result.error}`);
+      if (result.error) {
+        core.warning(`Error retrieving comment metadata for discussion ${discussionNum}: ${result.error}`);
+      }
+
+      return result.data.repository?.discussion?.comments as DiscussionCommentConnection;
+    }
+    catch(error) {
+      core.info(`Error ${error} reported in getting comments metadata for the discussion ${discussionNum} `);
       return {} as DiscussionCommentConnection;
     }
-
-    return result.data.repository?.discussion?.comments as DiscussionCommentConnection;
   }
 
   public async getDiscussionsMetaData(categoryID: string, pageSize: number, afterCursor: string): Promise<DiscussionConnection> {
